@@ -19,7 +19,7 @@ class Daemon:
             if pid > 0:
                 exit(0)
         except OSError as e:
-            stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
+            stderr.write(f"fork #1 failed: {e.errno} {e.strerror}\n")
             exit(1)
        
         chdir("/")
@@ -31,7 +31,7 @@ class Daemon:
             if pid > 0:
                 exit(0)
         except OSError as e:
-            stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
+            stderr.write(f"fork #2 failed: {e.errno} {e.strerror}\n")
             exit(1)
        
         stdout.flush()
@@ -45,7 +45,7 @@ class Daemon:
        
         register(self.delpid)
         pid = str(getpid())
-        open(self.pidfile,'w+').write("%s\n" % pid)
+        open(self.pidfile,'w+').write(f"{pid}\n")
        
     def delpid(self):
         remove(self.pidfile)
@@ -59,8 +59,7 @@ class Daemon:
             pid = None
        
             if pid:
-                message = "pidfile %s already exist. Nuthatch already running?\n"
-                stderr.write(message % self.pidfile)
+                stderr.write(f"pidfile {self.pidfile} already exist. Nuthatch already running?\n")
                 exit(1)
                
             self.daemonize()
@@ -75,8 +74,7 @@ class Daemon:
             pid = None
        
         if not pid:
-            message = "pidfile %s does not exist. Nuthatch not running?\n"
-            stderr.write(message % self.pidfile)
+            stderr.write(f"pidfile {self.pidfile} does not exist. Nuthatch not running?\n")
             return
  
         try:
@@ -106,15 +104,13 @@ class Daemon:
             c_time = None
     
         if not c_time:
-            message = "Nuthatch is down\n"
+            stderr.write("Nuthatch is down\n")
         else:
             total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
             if total_seconds < 60:
-                message = f"Nuthatch has been running for {total_seconds} seconds.\n"
+                stderr.write(f"Nuthatch has been running for {total_seconds} seconds.\n")
             elif total_seconds < 3600:
-                message = f"Nuthatch has been running for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n"
+                stderr.write(f"Nuthatch has been running for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
             else:
-                message = f"Nuthatch has been running for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n"
-            
-        stderr.write(message)
+                stderr.write(f"Nuthatch has been running for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
         return

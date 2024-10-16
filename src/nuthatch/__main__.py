@@ -24,7 +24,7 @@ def main() -> None:
             exit(2)
         exit(0)
     else:
-        print("usage: %s start|stop|restart" % argv[0])
+        print(f"usage: [{argv[0]}] : start | stop | restart | status")
         exit(2)
 
 if __name__ == "__main__":
