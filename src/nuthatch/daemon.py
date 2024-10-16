@@ -1,5 +1,7 @@
-
-import sys, os, time, atexit
+from os import fork, chdir, setsid, umask, dup2, getpid, remove, kill, path
+from sys import exit, stdin, stdout, stderr
+from time import sleep
+from atexit import register
 from datetime import datetime
 from signal import SIGTERM
 import env
@@ -13,40 +15,40 @@ class Daemon:
        
     def daemonize(self):
         try:
-            pid = os.fork()
+            pid = fork()
             if pid > 0:
-                sys.exit(0)
+                exit(0)
         except OSError as e:
-            sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
-            sys.exit(1)
+            stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
+            exit(1)
        
-        os.chdir("/")
-        os.setsid()
-        os.umask(0)
+        chdir("/")
+        setsid()
+        umask(0)
        
         try:
-            pid = os.fork()
+            pid = fork()
             if pid > 0:
-                sys.exit(0)
+                exit(0)
         except OSError as e:
-            sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
-            sys.exit(1)
+            stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
+            exit(1)
        
-        sys.stdout.flush()
-        sys.stderr.flush()
+        stdout.flush()
+        stderr.flush()
         si = open(self.stdin, 'r')
         so = open(self.stdout, 'a+')
         se = open(self.stderr, 'a+')
-        os.dup2(si.fileno(), sys.stdin.fileno())
-        os.dup2(so.fileno(), sys.stdout.fileno())
-        os.dup2(se.fileno(), sys.stderr.fileno())
+        dup2(si.fileno(), stdin.fileno())
+        dup2(so.fileno(), stdout.fileno())
+        dup2(se.fileno(), stderr.fileno())
        
-        atexit.register(self.delpid)
-        pid = str(os.getpid())
+        register(self.delpid)
+        pid = str(getpid())
         open(self.pidfile,'w+').write("%s\n" % pid)
        
     def delpid(self):
-        os.remove(self.pidfile)
+        remove(self.pidfile)
 
     def start(self):
         try:
@@ -58,8 +60,8 @@ class Daemon:
        
             if pid:
                 message = "pidfile %s already exist. Nuthatch already running?\n"
-                sys.stderr.write(message % self.pidfile)
-                sys.exit(1)
+                stderr.write(message % self.pidfile)
+                exit(1)
                
             self.daemonize()
             self.run()
@@ -74,32 +76,32 @@ class Daemon:
        
         if not pid:
             message = "pidfile %s does not exist. Nuthatch not running?\n"
-            sys.stderr.write(message % self.pidfile)
+            stderr.write(message % self.pidfile)
             return
  
         try:
             while 1:
-                os.kill(pid, SIGTERM)
-                time.sleep(0.1)
+                kill(pid, SIGTERM)
+                sleep(0.1)
         except OSError as err:
             err = str(err)
             if err.find("No such process") > 0:
-                if os.path.exists(self.pidfile):
-                    os.remove(self.pidfile)
+                if path.exists(self.pidfile):
+                    remove(self.pidfile)
             else:
                 print(err)
-                sys.exit(1)
+                exit(1)
  
     def restart(self):
         self.stop()
         self.start()
  
     def run(self):
-        print("Nuthatch started")
+        stderr.write("Nuthatch started\n")
 
     def status(self):
         try:
-            c_time = os.path.getctime(self.pidfile) 
+            c_time = path.getctime(self.pidfile) 
         except IOError:
             c_time = None
     
@@ -114,5 +116,5 @@ class Daemon:
             else:
                 message = f"Nuthatch has been running for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n"
             
-        sys.stderr.write(message)
+        stderr.write(message)
         return
