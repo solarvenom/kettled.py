@@ -2,10 +2,12 @@
 from sys import exit, argv
 from time import sleep
 from nuthatch.daemon import Daemon
+from env import ICON
  
 class NuthatchDaemon(Daemon):
     def run(self):
         while True:
+            print("kekeekeke")
             sleep(1)
  
 def main() -> None:
@@ -24,7 +26,7 @@ def main() -> None:
             exit(2)
         exit(0)
     else:
-        print(f"usage: [{argv[0]}] : start | stop | restart | status")
+        print(f"{ICON} usage: [{argv[0]}] : start | stop | restart | status")
         exit(2)
 
 if __name__ == "__main__":
