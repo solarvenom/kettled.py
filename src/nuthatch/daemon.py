@@ -1,14 +1,10 @@
 
 import sys, os, time, atexit
+from datetime import datetime
 from signal import SIGTERM
 import env
  
 class Daemon:
-    """
-    A generic daemon class.
-       
-    Usage: subclass the Daemon class and override the run() method
-    """
     def __init__(self, pidfile=env.PID_FILE, stdin=env.STD_IN, stdout=env.STD_OUT, stderr=env.STD_ERR):
         self.stdin = stdin
         self.stdout = stdout
@@ -61,7 +57,7 @@ class Daemon:
             pid = None
        
             if pid:
-                message = "pidfile %s already exist. Daemon already running?\n"
+                message = "pidfile %s already exist. Nuthatch already running?\n"
                 sys.stderr.write(message % self.pidfile)
                 sys.exit(1)
                
@@ -77,7 +73,7 @@ class Daemon:
             pid = None
        
         if not pid:
-            message = "pidfile %s does not exist. Daemon not running?\n"
+            message = "pidfile %s does not exist. Nuthatch not running?\n"
             sys.stderr.write(message % self.pidfile)
             return
  
@@ -100,3 +96,23 @@ class Daemon:
  
     def run(self):
         print("Nuthatch started")
+
+    def status(self):
+        try:
+            c_time = os.path.getctime(self.pidfile) 
+        except IOError:
+            c_time = None
+    
+        if not c_time:
+            message = "Nuthatch is down\n"
+        else:
+            total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
+            if total_seconds < 60:
+                message = f"Nuthatch has been running for {total_seconds} seconds.\n"
+            elif total_seconds < 3600:
+                message = f"Nuthatch has been running for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n"
+            else:
+                message = f"Nuthatch has been running for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n"
+            
+        sys.stderr.write(message)
+        return
