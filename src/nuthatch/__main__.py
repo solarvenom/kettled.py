@@ -7,7 +7,6 @@ from env import ICON
 class NuthatchDaemon(Daemon):
     def run(self):
         while True:
-            print("kekeekeke")
             sleep(1)
  
 def main() -> None:
@@ -22,7 +21,7 @@ def main() -> None:
         elif 'status' == argv[1]:
             daemon.status()
         else:
-            print("Unknown command")
+            print(f"{ICON} Unknown command")
             exit(2)
         exit(0)
     else:

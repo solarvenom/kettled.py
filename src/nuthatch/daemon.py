@@ -58,12 +58,12 @@ class Daemon:
         except IOError:
             pid = None
        
-            if pid:
-                stderr.write(f"{ICON} pidfile {self.pidfile} already exist. Nuthatch already running?\n")
-                exit(1)
+        if pid:
+            stderr.write(f"{ICON} Nuthatch alredy running. Check uptime with 'nuthatch status'.\n")
+            exit(1)
                
-            self.daemonize()
-            self.run()
+        self.daemonize()
+        self.run()
  
     def stop(self):
         try:
