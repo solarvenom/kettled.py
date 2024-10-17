@@ -5,7 +5,9 @@ from atexit import register
 from datetime import datetime
 from signal import SIGTERM
 from env import PID_FILE, STD_IN, STD_OUT, STD_ERR, ICON
- 
+from nuthatch.scheduler import Scheduler
+from nuthatch.types import StorageEvent, StorageEventInput
+
 class Daemon:
     def __init__(self, pidfile=PID_FILE, stdin=STD_IN, stdout=STD_OUT, stderr=STD_ERR):
         self.stdin = stdin
@@ -57,7 +59,7 @@ class Daemon:
             pf.close()
         except IOError:
             pid = None
-       
+
         if pid:
             stderr.write(f"{ICON} Nuthatch alredy running. Check uptime with 'nuthatch status'.\n")
             exit(1)
@@ -76,7 +78,7 @@ class Daemon:
         if not pid:
             stderr.write(f"{ICON} pidfile {self.pidfile} does not exist. Nuthatch not running?\n")
             return
- 
+
         try:
             while 1:
                 kill(pid, SIGTERM)
@@ -95,7 +97,10 @@ class Daemon:
         self.start()
  
     def run(self):
-        stderr.write("{ICON} Nuthatch started\n")
+        stdout.write("{ICON} Nuthatch started\n")
+        scheduler = Scheduler()
+
+        # scheduler.add(timestamp=1, event=StorageEventInput(name="test event", date_time="2024-10-17 09:57:28", callback=print("kekekekeke")))
 
     def status(self):
         try:
@@ -104,13 +109,13 @@ class Daemon:
             c_time = None
     
         if not c_time:
-            stderr.write("{ICON} Nuthatch is down\n")
+            stdout.write("{ICON} Nuthatch is down\n")
         else:
             total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
             if total_seconds < 60:
-                stderr.write(f"{ICON} Nuthatch has been up for {total_seconds} seconds.\n")
+                stdout.write(f"{ICON} Nuthatch has been up for {total_seconds} seconds.\n")
             elif total_seconds < 3600:
-                stderr.write(f"{ICON} Nuthatch has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
+                stdout.write(f"{ICON} Nuthatch has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
             else:
-                stderr.write(f"{ICON} Nuthatch has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
+                stdout.write(f"{ICON} Nuthatch has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
         return
