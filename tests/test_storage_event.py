@@ -1,4 +1,3 @@
-from nuthatch.scheduler import Scheduler
 from nuthatch.types import StorageEvent
 
 def test_storage_event():

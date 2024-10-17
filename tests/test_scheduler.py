@@ -1,5 +1,4 @@
 from nuthatch.scheduler import Scheduler
-from nuthatch.types import StorageEventInput
 
 def test_scheduler_init():
     test_instance = Scheduler()
