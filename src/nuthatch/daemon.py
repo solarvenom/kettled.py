@@ -6,7 +6,6 @@ from datetime import datetime
 from signal import SIGTERM
 from env import PID_FILE, STD_IN, STD_OUT, STD_ERR, ICON
 from nuthatch.scheduler import Scheduler
-from nuthatch.types import StorageEvent, StorageEventInput
 
 class Daemon:
     def __init__(self, pidfile=PID_FILE, stdin=STD_IN, stdout=STD_OUT, stderr=STD_ERR):
