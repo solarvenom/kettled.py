@@ -7,9 +7,11 @@ class Scheduler:
     index: dict[str, int] = field(default_factory=dict[str, int])
 
     def add(self, timestamp: int, event: StorageEventInput):
-        self.storage[timestamp].append(
-            StorageEvent(
-                name=event.name,
-                date_time=event.date_time, 
-                callback=lambda: event.callback))
-        
+        try:
+            self.storage[timestamp].append(
+                StorageEvent(
+                    name=event.name,
+                    date_time=event.date_time, 
+                    callback=lambda: event.callback))
+        except ValueError as e:
+            print(e)

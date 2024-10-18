@@ -1,26 +1,26 @@
-# date_formats: list[str] = [
-#     "%Y-%m-%d",
-#     "%d/%m/%Y",
-#     "%m-%d-%Y",
-#     "%B %d, %Y",
-#     "%b %d, %Y",
-#     "%d-%b-%Y",
-#     "%Y/%m/%d",
-#     "%d %B %Y",
-#     "%A, %B %d, %Y",
-#     "%Y-%m-%d %H:%M:%S",
-#     "%d/%m/%Y %I:%M %p",
-#     "%m-%d-%Y %H:%M",
-#     "%d %b %Y, %H:%M:%S",
-#     "%B %d, %Y at %I:%M %p",
-#     "%Y/%m/%d %H:%M:%S.%f",
-#     "%a, %d %b %Y %H:%M:%S",
-#     "%A, %d %B %Y, %I:%M %p",
-#     "%Y%m%dT%H%M%S",
-#     "%H:%M:%S on %d/%m/%Y",
-#     "%Y-%m-%d %H:%M:%S %Z",
-#     "%Y-%m-%d %H:%M:%S %z",
-#     "%Y-%m-%dT%H:%M:%S%z",
-#     "%Y-%m-%dT%H:%M:%S.%f%z",
-#     "%Y-%m-%dT%H:%M:%S"
-# ]
+DATE_FORMATS: dict[str, str] = {
+    r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$": "%Y-%m-%d", # YYYY-MM-DD (e.g., 2024-10-17)
+    r"^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])-\d{4}$": "%m-%d-%Y", # MM-DD-YYYY (e.g., 10-17-2024)
+    r"^(0[1-9]|[12]\d|3[01])/(0[1-9]|1[0-2])/\d{4}$": "%d/%m/%Y", # DD/MM/YYYY (e.g., 17/10/2024)
+    r"^[A-Za-z]+ (0[1-9]|[12]\d|3[01]), \d{4}$": "%B %d, %Y", # Full month name DD, YYYY (e.g., October 17, 2024)
+    r"^[A-Za-z]{3} (0[1-9]|[12]\d|3[01]), \d{4}$": "%b %d, %Y", # Abbreviated month name DD, YYYY (e.g., Oct 17, 2024)
+    r"^(0[1-9]|[12]\d|3[01])-[A-Za-z]{3}-\d{4}$": "%d-%b-%Y", # DD-Abbreviated month-YYYY (e.g., 17-Oct-2024)
+    r"^\d{4}/(0[1-9]|1[0-2])/(0[1-9]|[12]\d|3[01])$": "%Y/%m/%d", # YYYY/MM/DD (e.g., 2024/10/17)
+    r"^(0[1-9]|[12]\d|3[01]) [A-Za-z]+ \d{4}$": "%d %B %Y", # DD Full month name YYYY (e.g., 17 October 2024)
+    r"^[A-Za-z]+, [A-Za-z]+ (0[1-9]|[12]\d|3[01]), \d{4}$": "%A, %B %d, %Y", # Day name, Full month name DD, YYYY (e.g., Thursday, October 17, 2024)
+    r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) \d{2}:\d{2}:\d{2}$": "%Y-%m-%d %H:%M:%S", # YYYY-MM-DD HH:MM:SS (e.g., 2024-10-17 14:28:00)
+    r"^(0[1-9]|[12]\d|3[01])/(0[1-9]|1[0-2])/\d{4} \d{2}:\d{2} (AM|PM)$": "%d/%m/%Y %I:%M %p", # DD/MM/YYYY HH:MM AM/PM (e.g., 17/10/2024 02:28 PM)
+    r"^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])-\d{4} \d{2}:\d{2}$": "%m-%d-%Y %H:%M", # MM-DD-YYYY HH:MM (e.g., 10-17-2024 14:28)
+    r"^(0[1-9]|[12]\d|3[01]) [A-Za-z]{3} \d{4}, \d{2}:\d{2}:\d{2}$": "%d %b %Y, %H:%M:%S", # DD Abbreviated month YYYY, HH:MM:SS (e.g., 17 Oct 2024, 14:28:00)
+    r"^[A-Za-z]+ (0[1-9]|[12]\d|3[01]), \d{4} at \d{2}:\d{2} (AM|PM)$": "%B %d, %Y at %I:%M %p", # Full month DD, YYYY at HH:MM AM/PM (e.g., October 17, 2024 at 02:28 PM)
+    r"^\d{4}/(0[1-9]|1[0-2])/(0[1-9]|[12]\d|3[01]) \d{2}:\d{2}:\d{2}\.\d+$": "%Y/%m/%d %H:%M:%S.%f", # YYYY/MM/DD HH:MM:SS.microsecond (e.g., 2024/10/17 14:28:00.123456)
+    r"^[A-Za-z]{3}, (0[1-9]|[12]\d|3[01]) [A-Za-z]{3} \d{4} \d{2}:\d{2}:\d{2}$": "%a, %d %b %Y %H:%M:%S", # Abbreviated weekday, DD Abbreviated month YYYY HH:MM:SS (e.g., Thu, 17 Oct 2024 14:28:00)
+    r"^[A-Za-z]+, (0[1-9]|[12]\d|3[01]) [A-Za-z]+ \d{4}, \d{2}:\d{2} (AM|PM)$": "%A, %d %B %Y, %I:%M %p", # Full weekday, DD Full month name YYYY, HH:MM AM/PM (e.g., Thursday, 17 October 2024, 02:28 PM)
+    r"^\d{8}T\d{6}$": "%Y%m%dT%H%M%S", # Compact date-time format (e.g., 20241017T142800)
+    r"^\d{2}:\d{2}:\d{2} on (0[1-9]|[12]\d|3[01])/(0[1-9]|1[0-2])/\d{4}$": "%H:%M:%S on %d/%m/%Y", # HH:MM:SS on DD/MM/YYYY (e.g., 14:28:00 on 17/10/2024)
+    r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) \d{2}:\d{2}:\d{2} [A-Z]+$": "%Y-%m-%d %H:%M:%S %Z", # YYYY-MM-DD HH:MM:SS TZ (e.g., 2024-10-17 14:28:00 UTC)
+    r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) \d{2}:\d{2}:\d{2} [+-]\d{2}:\d{2}$": "%Y-%m-%d %H:%M:%S %z", # YYYY-MM-DD HH:MM:SS +HH:MM (e.g., 2024-10-17 14:28:00 +02:00)
+    r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$": "%Y-%m-%dT%H:%M:%S%z", # YYYY-MM-DDTHH:MM:SS+HH:MM (e.g., 2024-10-17T14:28:00+02:00)
+    r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T\d{2}:\d{2}:\d{2}\.\d+[+-]\d{2}:\d{2}$": "%Y-%m-%dT%H:%M:%S.%f%z", # YYYY-MM-DDTHH:MM:SS.microsecond+HH:MM (e.g., 2024-10-17T14:28:00.123456+02:00)
+    r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T\d{2}:\d{2}:\d{2}$": "%Y-%m-%dT%H:%M:%S" # YYYY-MM-DDTHH:MM:SS (e.g., 2024-10-17T14:28:00)
+}
