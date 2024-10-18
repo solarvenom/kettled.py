@@ -29,4 +29,4 @@ def test_get_timestamp_fail_case():
             callback=lambda: callback()
         )
     
-    assert str(excinfo.value) == f"{ERROR_MESSAGES.UNSUPPORTED_DATE_FORMAT}"
+    assert str(excinfo.value) == ERROR_MESSAGES.UNSUPPORTED_DATE_FORMAT.value

@@ -6,6 +6,7 @@ from datetime import datetime
 from signal import SIGTERM
 from env import PID_FILE, STD_IN, STD_OUT, STD_ERR, ICON
 from nuthatch.scheduler import Scheduler
+from nuthatch.constants.enums import MESSAGES
 
 class Daemon:
     def __init__(self, pidfile=PID_FILE, stdin=STD_IN, stdout=STD_OUT, stderr=STD_ERR):
@@ -60,7 +61,7 @@ class Daemon:
             pid = None
 
         if pid:
-            stderr.write(f"{ICON} Nuthatch alredy running. Check uptime with 'nuthatch status'.\n")
+            stderr.write(MESSAGES.IS_ALREADY_RUNNING.value)
             exit(1)
                
         self.daemonize()
@@ -96,7 +97,7 @@ class Daemon:
         self.start()
  
     def run(self):
-        stdout.write("{ICON} Nuthatch started\n")
+        stdout.write(MESSAGES.IS_STARTED.value)
         scheduler = Scheduler()
 
         # scheduler.add(timestamp=1, event=StorageEventInput(name="test event", date_time="2024-10-17 09:57:28", callback=print("kekekekeke")))
@@ -108,7 +109,7 @@ class Daemon:
             c_time = None
     
         if not c_time:
-            stdout.write("{ICON} Nuthatch is down\n")
+            stdout.write(MESSAGES.IS_DOWN.value)
         else:
             total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
             if total_seconds < 60:

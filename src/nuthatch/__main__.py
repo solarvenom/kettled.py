@@ -1,8 +1,8 @@
 
-from sys import exit, argv
+from sys import exit, argv, stderr
 from time import sleep
 from nuthatch.daemon import Daemon
-from env import ICON
+from nuthatch.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES
  
 class NuthatchDaemon(Daemon):
     def run(self):
@@ -12,20 +12,20 @@ class NuthatchDaemon(Daemon):
 def main() -> None:
     daemon = NuthatchDaemon()
     if len(argv) == 2:
-        if 'start' == argv[1]:
+        if COMMANDS.START == argv[1]:
             daemon.start()
-        elif 'stop' == argv[1]:
+        elif COMMANDS.STOP == argv[1]:
             daemon.stop()
-        elif 'restart' == argv[1]:
+        elif COMMANDS.RESTART == argv[1]:
             daemon.restart()
-        elif 'status' == argv[1]:
+        elif COMMANDS.STATUS == argv[1]:
             daemon.status()
         else:
-            print(f"{ICON} Unknown command")
+            stderr.write(ERROR_MESSAGES.UNKNOWN_COMMAND.value)
             exit(2)
         exit(0)
     else:
-        print(f"{ICON} usage: [{argv[0]}] : start | stop | restart | status")
+        stderr.write(MESSAGES.USAGE.value)
         exit(2)
 
 if __name__ == "__main__":

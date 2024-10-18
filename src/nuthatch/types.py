@@ -18,7 +18,7 @@ class StorageEvent:
                 break
 
         if not matched_format:
-            raise ValueError(f"{ERROR_MESSAGES.UNSUPPORTED_DATE_FORMAT}")
+            raise ValueError(ERROR_MESSAGES.UNSUPPORTED_DATE_FORMAT.value)
         return matched_format
         
 class StorageEventInput:

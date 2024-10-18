@@ -1,5 +1,6 @@
 # NutHatch
 ICON="🪶"
+ERROR_ICON="⚠️"
 
 # DAEMON CONSTANTS
 PID_FILE="/tmp/nuthatch.pid"
