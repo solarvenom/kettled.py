@@ -12,7 +12,9 @@ class ERROR_MESSAGES(Enum):
     UNSUPPORTED_DATE_FORMAT = f"{ERROR_ICON} Unsupported date format.\n"
     UNKNOWN_COMMAND = f"{ERROR_ICON} Unknown command.\n"
     MISSING_EVENT_NAME = f"{ERROR_ICON} Event name is missing.\n"
+    MISSING_EVENT_DATETIME = f"{ERROR_ICON} Event date and time is missing.\n"
     MISSING_EVENT_CALLBACK = f"{ERROR_ICON} Event callback is missing.\n"
+    NAME_NOT_UNIQUE = f"{ERROR_ICON} Event name must be unique.\n"
 
 class MESSAGES(Enum):
     USAGE = f"{ICON} Available commands: {COMMANDS.START.value} | {COMMANDS.STOP.value} | {COMMANDS.RESTART.value} | {COMMANDS.STATUS.value}\n"
