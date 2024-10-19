@@ -100,8 +100,6 @@ class Daemon:
         stdout.write(MESSAGES.IS_STARTED.value)
         scheduler = Scheduler()
 
-        # scheduler.add(timestamp=1, event=StorageEventInput(name="test event", date_time="2024-10-17 09:57:28", callback=print("kekekekeke")))
-
     def status(self):
         try:
             c_time = path.getctime(self.pidfile) 

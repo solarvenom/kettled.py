@@ -32,4 +32,11 @@ class Scheduler:
         self.storage[timestamp][name] = lambda: callback
         self.index[name] = timestamp
 
-    
+    def list(self):
+        event_list: list[list] = []
+        index = 1
+        for event_name, timestamp in self.index.items():
+            event_list.append([index, event_name, datetime.fromtimestamp(timestamp).isoformat()])
+            index += 1
+        for event in event_list:
+            print('| {:1} | {:^4} | {:>4} |'.format(*event))
