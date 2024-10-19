@@ -1,9 +1,5 @@
-# NutHatch
-ICON="🪶"
-ERROR_ICON="⚠️"
-
 # DAEMON CONSTANTS
-PID_FILE="/tmp/nuthatch.pid"
+PID_FILE="/tmp/cauldrond.pid"
 STD_IN="/dev/null"
 STD_OUT="/dev/null"
 STD_ERR="/dev/null"

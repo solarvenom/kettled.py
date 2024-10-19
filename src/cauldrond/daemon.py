@@ -4,9 +4,9 @@ from time import sleep
 from atexit import register
 from datetime import datetime
 from signal import SIGTERM
-from env import PID_FILE, STD_IN, STD_OUT, STD_ERR, ICON
-from nuthatch.scheduler import Scheduler
-from nuthatch.constants.enums import MESSAGES
+from cauldrond.constants.env import PID_FILE, STD_IN, STD_OUT, STD_ERR
+from cauldrond.scheduler import Scheduler
+from cauldrond.constants.enums import MESSAGES, ICONS
 
 class Daemon:
     def __init__(self, pidfile=PID_FILE, stdin=STD_IN, stdout=STD_OUT, stderr=STD_ERR):
@@ -21,7 +21,7 @@ class Daemon:
             if pid > 0:
                 exit(0)
         except OSError as e:
-            stderr.write(f"{ICON} fork #1 failed: {e.errno} {e.strerror}\n")
+            stderr.write(f"{ICONS.CRYSTALL_BALL} fork #1 failed: {e.errno} {e.strerror}\n")
             exit(1)
        
         chdir("/")
@@ -33,7 +33,7 @@ class Daemon:
             if pid > 0:
                 exit(0)
         except OSError as e:
-            stderr.write(f"{ICON} fork #2 failed: {e.errno} {e.strerror}\n")
+            stderr.write(f"{ICONS.CRYSTALL_BALL} fork #2 failed: {e.errno} {e.strerror}\n")
             exit(1)
        
         stdout.flush()
@@ -76,7 +76,7 @@ class Daemon:
             pid = None
        
         if not pid:
-            stderr.write(f"{ICON} pidfile {self.pidfile} does not exist. Nuthatch not running?\n")
+            stderr.write(f"{ICONS.CRYSTALL_BALL} pidfile {self.pidfile} does not exist. Claudrond not running?\n")
             return
 
         try:
@@ -111,9 +111,9 @@ class Daemon:
         else:
             total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
             if total_seconds < 60:
-                stdout.write(f"{ICON} Nuthatch has been up for {total_seconds} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL} Claudrond has been up for {total_seconds} seconds.\n")
             elif total_seconds < 3600:
-                stdout.write(f"{ICON} Nuthatch has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL} Claudrond has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
             else:
-                stdout.write(f"{ICON} Nuthatch has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL} Claudrond has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
         return

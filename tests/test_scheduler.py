@@ -1,4 +1,4 @@
-from nuthatch.scheduler import Scheduler
+from cauldrond.scheduler import Scheduler
 import seeds
 
 def test_scheduler_init():
