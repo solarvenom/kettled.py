@@ -17,10 +17,10 @@ class Scheduler:
                 break
         return matched_format
 
-    def set(self, name, date_time, callback):
-        if name is None:
+    def set(self, event_name, date_time, callback):
+        if event_name is None:
             raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
-        if name in self.index:
+        if event_name in self.index:
             raise ValueError(ERROR_MESSAGES.NAME_NOT_UNIQUE.value)
         if callback is None:
             raise ValueError(ERROR_MESSAGES.MISSING_EVENT_CALLBACK.value)
@@ -29,8 +29,8 @@ class Scheduler:
             raise ValueError(ERROR_MESSAGES.UNSUPPORTED_DATE_FORMAT.value)
         if timestamp not in self.storage:
             self.storage[timestamp] = {}
-        self.storage[timestamp][name] = lambda: callback
-        self.index[name] = timestamp
+        self.storage[timestamp][event_name] = lambda: callback
+        self.index[event_name] = timestamp
 
     def list(self):
         event_list: list[list] = []
@@ -40,3 +40,17 @@ class Scheduler:
             index += 1
         for event in event_list:
             print('| {:1} | {:^4} | {:>4} |'.format(*event))
+
+    def remove(self, event_name):
+        if event_name not in self.index.keys():
+            raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
+        event_timestamp = self.index[event_name]
+        if len(self.storage[event_timestamp]) > 1:
+            self.storage[event_timestamp].pop(event_name)
+        else:
+            self.storage.pop(event_timestamp)
+        self.index.pop(event_name)
+        
+    # def reschedule(self, event_name, new_date_time):
+    #     if event_name is None:
+    #         raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)

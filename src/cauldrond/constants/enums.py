@@ -14,9 +14,9 @@ class COMMANDS(Enum):
 class ERROR_MESSAGES(Enum):
     UNSUPPORTED_DATE_FORMAT = f"{ICONS.SKULL} Unsupported date format.\n"
     UNKNOWN_COMMAND = f"{ICONS.SKULL} Unknown command.\n"
-    MISSING_EVENT_NAME = f"{ICONS.SKULL} Event name is missing.\n"
-    MISSING_EVENT_DATETIME = f"{ICONS.SKULL} Event date and time is missing.\n"
-    MISSING_EVENT_CALLBACK = f"{ICONS.SKULL} Event callback is missing.\n"
+    MISSING_EVENT_NAME = f"{ICONS.SKULL} Event name is required.\n"
+    MISSING_EVENT_DATETIME = f"{ICONS.SKULL} Event date and time is required.\n"
+    MISSING_EVENT_CALLBACK = f"{ICONS.SKULL} Event callback is required.\n"
     NAME_NOT_UNIQUE = f"{ICONS.SKULL} Event name must be unique.\n"
 
 class MESSAGES(Enum):
