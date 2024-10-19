@@ -1,31 +1,27 @@
 import pytest
 from nuthatch.types import StorageEvent
 from nuthatch.constants.enums import ERROR_MESSAGES
-
-test_name = "nuthatch"
-test_date = "2024-10-17T14:28:00+02:00"
-test_timestamp = 1729168080
-test_phrase = "Sitta europaea"
+import seeds
 
 def callback():
-    return test_phrase
+    return seeds.STORAGE_EVENT_CALLBACK_VALUE
 
 def test_storage_event_init():
     test_event = StorageEvent(
-        name=test_name,
-        date_time=test_date,
+        name=seeds.STORAGE_EVENT_NAME,
+        date_time=seeds.STORAGE_EVENT_DATE,
         callback=lambda: callback()
     )
 
-    assert test_event.name == test_name
-    assert test_event.expires_at == test_timestamp
-    assert test_event.callback() == test_phrase
+    assert test_event.name == seeds.STORAGE_EVENT_NAME
+    assert test_event.expires_at == seeds.STORAGE_EVENT_TIMESTAMP
+    assert test_event.callback() == seeds.STORAGE_EVENT_CALLBACK_VALUE
 
 def test_missing_name():
     with pytest.raises(ValueError) as excinfo:
         StorageEvent(
             name=None,
-            date_time=test_date,
+            date_time=seeds.STORAGE_EVENT_DATE,
             callback=lambda: callback()
         )
 
@@ -34,8 +30,8 @@ def test_missing_name():
 def test_missing_callback():
     with pytest.raises(ValueError) as excinfo:
         StorageEvent(
-            name=test_name,
-            date_time=test_date,
+            name=seeds.STORAGE_EVENT_NAME,
+            date_time=seeds.STORAGE_EVENT_DATE,
             callback=None
         )
 
@@ -44,8 +40,8 @@ def test_missing_callback():
 def test_unsupported_timestring_format():
     with pytest.raises(ValueError) as excinfo:
         StorageEvent(
-            name=test_name,
-            date_time="010203",
+            name=seeds.STORAGE_EVENT_NAME,
+            date_time=seeds.STORAGE_EVENT_UNSUPPORTED_DATE,
             callback=lambda: callback()
         )
     
