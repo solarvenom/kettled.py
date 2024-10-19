@@ -21,9 +21,29 @@ def test_storage_event_init():
     assert test_event.expires_at == test_timestamp
     assert test_event.callback() == test_phrase
 
-def test_get_timestamp_fail_case():
+def test_missing_name():
     with pytest.raises(ValueError) as excinfo:
-        test_event = StorageEvent(
+        StorageEvent(
+            name=None,
+            date_time=test_date,
+            callback=lambda: callback()
+        )
+
+    assert str(excinfo.value) == ERROR_MESSAGES.MISSING_EVENT_NAME.value
+
+def test_missing_callback():
+    with pytest.raises(ValueError) as excinfo:
+        StorageEvent(
+            name=test_name,
+            date_time=test_date,
+            callback=None
+        )
+
+    assert str(excinfo.value) == ERROR_MESSAGES.MISSING_EVENT_CALLBACK.value
+
+def test_unsupported_timestring_format():
+    with pytest.raises(ValueError) as excinfo:
+        StorageEvent(
             name=test_name,
             date_time="010203",
             callback=lambda: callback()

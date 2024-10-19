@@ -12,13 +12,13 @@ class NuthatchDaemon(Daemon):
 def main() -> None:
     daemon = NuthatchDaemon()
     if len(argv) == 2:
-        if COMMANDS.START == argv[1]:
+        if COMMANDS.START.value == argv[1]:
             daemon.start()
-        elif COMMANDS.STOP == argv[1]:
+        elif COMMANDS.STOP.value == argv[1]:
             daemon.stop()
-        elif COMMANDS.RESTART == argv[1]:
+        elif COMMANDS.RESTART.value == argv[1]:
             daemon.restart()
-        elif COMMANDS.STATUS == argv[1]:
+        elif COMMANDS.STATUS.value == argv[1]:
             daemon.status()
         else:
             stderr.write(ERROR_MESSAGES.UNKNOWN_COMMAND.value)
