@@ -20,6 +20,16 @@ def main() -> None:
             daemon.restart()
         elif COMMANDS.STATUS.value == argv[1]:
             daemon.status()
+        elif COMMANDS.LIST.value == argv[1]:
+            daemon.list()
+        elif COMMANDS.ADD.value == argv[1]:
+            event_name = input("Enter event_name: ")
+            date_time = input("Enter event date_time: ")
+            callback = input("Enter event callback: ")
+            daemon.add(
+                event_name=event_name,
+                date_time=date_time,
+                callback=callback)
         else:
             stderr.write(ERROR_MESSAGES.UNKNOWN_COMMAND.value)
             exit(2)

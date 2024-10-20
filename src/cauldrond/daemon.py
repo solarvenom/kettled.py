@@ -14,6 +14,7 @@ class Daemon:
         self.stdout = stdout
         self.stderr = stderr
         self.pidfile = pidfile
+        # self.scheduler = Scheduler()
        
     def daemonize(self):
         try:
@@ -21,21 +22,21 @@ class Daemon:
             if pid > 0:
                 exit(0)
         except OSError as e:
-            stderr.write(f"{ICONS.CRYSTALL_BALL} fork #1 failed: {e.errno} {e.strerror}\n")
+            stderr.write(f"{ICONS.CRYSTALL_BALL.value} fork #1 failed: {e.errno} {e.strerror}\n")
             exit(1)
-       
+
         chdir("/")
         setsid()
         umask(0)
-       
+
         try:
             pid = fork()
             if pid > 0:
                 exit(0)
         except OSError as e:
-            stderr.write(f"{ICONS.CRYSTALL_BALL} fork #2 failed: {e.errno} {e.strerror}\n")
+            stderr.write(f"{ICONS.CRYSTALL_BALL.value} fork #2 failed: {e.errno} {e.strerror}\n")
             exit(1)
-       
+
         stdout.flush()
         stderr.flush()
         si = open(self.stdin, 'r')
@@ -76,7 +77,7 @@ class Daemon:
             pid = None
        
         if not pid:
-            stderr.write(f"{ICONS.CRYSTALL_BALL} pidfile {self.pidfile} does not exist. Dauldrond not running?\n")
+            stderr.write(f"{ICONS.CRYSTALL_BALL.value} pidfile {self.pidfile} does not exist. Dauldrond not running?\n")
             return
 
         try:
@@ -97,8 +98,17 @@ class Daemon:
         self.start()
  
     def run(self):
-        stdout.write(MESSAGES.IS_STARTED.value)
-        scheduler = Scheduler()
+        stderr.write(MESSAGES.IS_STARTED.value)
+
+    # def add(self, event_name, date_time, callback):
+    #     self.scheduler.set(
+    #         event_name=event_name,
+    #         date_time=date_time,
+    #         callback=callback)
+    #     stdout.write(MESSAGES.EVENT_ADDED.value)
+
+    # def list(self):
+    #     self.scheduler.list()
 
     def status(self):
         try:
@@ -111,9 +121,12 @@ class Daemon:
         else:
             total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
             if total_seconds < 60:
-                stdout.write(f"{ICONS.CRYSTALL_BALL} Cauldrond has been up for {total_seconds} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL.value} Cauldrond has been up for {total_seconds} seconds.\n")
             elif total_seconds < 3600:
-                stdout.write(f"{ICONS.CRYSTALL_BALL} Cauldrond has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL.value} Cauldrond has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
             else:
-                stdout.write(f"{ICONS.CRYSTALL_BALL} Cauldrond has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL.value} Cauldrond has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
         return
+    
+    # def is_running(self):
+        

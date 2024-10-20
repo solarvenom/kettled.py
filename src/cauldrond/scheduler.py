@@ -1,7 +1,8 @@
+from sys import stderr
 import re
 from datetime import datetime
 from cauldrond.constants.date_formats import DATE_FORMATS
-from cauldrond.constants.enums import ERROR_MESSAGES
+from cauldrond.constants.enums import ERROR_MESSAGES, EVENT_PARAMETERS
 
 class Scheduler:
     def __init__(self):
@@ -22,7 +23,10 @@ class Scheduler:
         if timestamp is None:
             raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
         callback = self.storage[timestamp][event_name]
-        return { "event_name": event_name, "date_time": timestamp, "callback": callback }
+        return { 
+            EVENT_PARAMETERS.EVENT_NAME.value: event_name, 
+            EVENT_PARAMETERS.DATE_TIME.value: timestamp, 
+            EVENT_PARAMETERS.CALLBACK.value: callback }
 
     def set(self, event_name, date_time, callback):
         if event_name is None:
@@ -40,15 +44,28 @@ class Scheduler:
             self.storage[timestamp] = {}
         self.storage[timestamp][event_name] = lambda: callback
         self.index[event_name] = timestamp
+        # testtesttesttest
+        stderr.write(f"{self.index}")
+        stderr.write(f"===========")
+        stderr.write(f"{self.storage}")
 
     def list(self):
+        # testtesttesttest
+        stderr.write(f"{self.index}")
+        stderr.write(f"===========")
+        stderr.write(f"{self.storage}")
+
         event_list: list[list] = []
-        index = 1
-        for event_name, timestamp in self.index.items():
-            event_list.append([index, event_name, datetime.fromtimestamp(timestamp).isoformat()])
-            index += 1
-        for event in event_list:
-            print('| {:1} | {:^4} | {:>4} |'.format(*event))
+        event_index = 1
+        if len(self.index) == 0:
+            stderr.write(ERROR_MESSAGES.NO_EVENTS_SCHEDULED.value)
+        else:
+            for event_name, timestamp in self.index.items():
+                event_list.append([event_index, event_name, datetime.fromtimestamp(timestamp).isoformat()])
+                event_index += 1
+            for event in event_list:
+                # print('| {:1} | {:^4} | {:>4} |'.format(*event))
+                stderr.write('| {:1} | {:^4} | {:>4} |'.format(*event))
 
     def remove(self, event_name):
         if event_name not in self.index.keys():
@@ -65,11 +82,11 @@ class Scheduler:
             raise ValueError(ERROR_MESSAGES.INSUFFICIENT_UPDATE_ARGS.value)
         event_to_update = self.get(event_name)
         if date_time is not None:
-            event_to_update["date_time"] = date_time
+            event_to_update[EVENT_PARAMETERS.DATE_TIME.value] = date_time
         if callback is not None:
-            event_to_update["callback"] = callback
+            event_to_update[EVENT_PARAMETERS.CALLBACK.value] = callback
         self.remove(event_name)
         self.set(
-            event_name=event_to_update["event_name"], 
-            date_time=event_to_update["date_time"], 
-            callback=event_to_update["callback"])
+            event_name=event_to_update[EVENT_PARAMETERS.EVENT_NAME.value], 
+            date_time=event_to_update[EVENT_PARAMETERS.DATE_TIME.value],
+            callback=event_to_update[EVENT_PARAMETERS.CALLBACK.value])

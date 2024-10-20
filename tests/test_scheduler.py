@@ -29,7 +29,8 @@ def test_list(capsys):
     ISOFORMAT = datetime.fromtimestamp(seeds.EVENT_TIMESTAMP).isoformat()
     test_instance.list()
     captured = capsys.readouterr()
-    assert captured.out == f"| 1 | {seeds.EVENT_NAME} | {ISOFORMAT} |\n"
+    # assert captured.out == f"| 1 | {seeds.EVENT_NAME} | {ISOFORMAT} |\n"
+    assert captured.err == f"| 1 | {seeds.EVENT_NAME} | {ISOFORMAT} |\n"
 
 def test_remove():
     test_instance = init_scheduler_set_event()
