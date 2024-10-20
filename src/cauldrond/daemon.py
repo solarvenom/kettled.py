@@ -76,7 +76,7 @@ class Daemon:
             pid = None
        
         if not pid:
-            stderr.write(f"{ICONS.CRYSTALL_BALL} pidfile {self.pidfile} does not exist. Claudrond not running?\n")
+            stderr.write(f"{ICONS.CRYSTALL_BALL} pidfile {self.pidfile} does not exist. Dauldrond not running?\n")
             return
 
         try:
@@ -111,9 +111,9 @@ class Daemon:
         else:
             total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
             if total_seconds < 60:
-                stdout.write(f"{ICONS.CRYSTALL_BALL} Claudrond has been up for {total_seconds} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL} Cauldrond has been up for {total_seconds} seconds.\n")
             elif total_seconds < 3600:
-                stdout.write(f"{ICONS.CRYSTALL_BALL} Claudrond has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL} Cauldrond has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
             else:
-                stdout.write(f"{ICONS.CRYSTALL_BALL} Claudrond has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
+                stdout.write(f"{ICONS.CRYSTALL_BALL} Cauldrond has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
         return

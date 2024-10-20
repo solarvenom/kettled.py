@@ -4,13 +4,13 @@ from time import sleep
 from cauldrond.daemon import Daemon
 from cauldrond.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES
  
-class ClaudronDaemon(Daemon):
+class CauldrondDaemon(Daemon):
     def run(self):
         while True:
             sleep(1)
  
 def main() -> None:
-    daemon = ClaudronDaemon()
+    daemon = CauldrondDaemon()
     if len(argv) == 2:
         if COMMANDS.START.value == argv[1]:
             daemon.start()

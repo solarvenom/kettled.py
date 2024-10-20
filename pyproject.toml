@@ -1,5 +1,5 @@
 [project]
-name = "claudrond"
+name = "cauldrond"
 description = "A simple, ligthweight and secure python scheduler for UNIX systems that does not depend on any third-party packages."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -8,11 +8,11 @@ license = { text = "MIT" }
 dynamic = ["version"]
 
 [project.scripts]
-claudrond = "claudrond.__main__:main"
+cauldrond = "cauldrond.__main__:main"
 
 [project.urls]
-"Homepage" = "https://github.com/solarvenom/claudrond"
-"Issue Tracker" = "https://github.com/solarvenom/claudrond/issues"
+"Homepage" = "https://github.com/solarvenom/cauldrond"
+"Issue Tracker" = "https://github.com/solarvenom/cauldrond/issues"
 
 [tool.pyright]
 pythonPlatform = "All"
