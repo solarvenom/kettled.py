@@ -51,6 +51,7 @@ class Scheduler:
 
     def list(self):
         # testtesttesttest
+        print("SMDALDSM")
         stderr.write(f"{self.index}")
         stderr.write(f"===========")
         stderr.write(f"{self.storage}")

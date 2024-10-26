@@ -1,9 +1,10 @@
 from os import fork, chdir, setsid, umask, dup2, getpid, remove, kill, path
-from sys import exit, stdin, stdout, stderr
+from sys import exit, stdin, stdout, stderr, executable
 from time import sleep
 from atexit import register
 from datetime import datetime
 from signal import SIGTERM
+import subprocess
 from cauldrond.constants.env import PID_FILE, STD_IN, STD_OUT, STD_ERR, DAEMON_NAME
 from cauldrond.constants.enums import ICONS
 from cauldrond.scheduler import Scheduler
@@ -15,41 +16,24 @@ class Daemon:
         self.stdout = stdout
         self.stderr = stderr
         self.pidfile = pidfile
-       
+        self.scheduler = None
+
+    def get_daemon_pid(self):
+        pf = open(self.pidfile,'r')
+        pid = int(pf.read().strip())
+        pf.close()
+        return pid
+
     def daemonize(self):
         try:
-            pid = fork()
-            if pid > 0:
-                exit(0)
-        except OSError as e:
-            stderr.write(f"{ICONS.CRYSTALL_BALL.value} fork #1 failed: {e.errno} {e.strerror}\n")
-            exit(1)
-       
-        chdir("/")
-        setsid()
-        umask(0)
-       
-        try:
-            pid = fork()
-            if pid > 0:
-                exit(0)
-        except OSError as e:
-            stderr.write(f"{ICONS.CRYSTALL_BALL.value} fork #2 failed: {e.errno} {e.strerror}\n")
-            exit(1)
-       
-        stdout.flush()
-        stderr.flush()
-        si = open(self.stdin, 'r')
-        so = open(self.stdout, 'a+')
-        se = open(self.stderr, 'a+')
-        dup2(si.fileno(), stdin.fileno())
-        dup2(so.fileno(), stdout.fileno())
-        dup2(se.fileno(), stderr.fileno())
-       
-        register(self.delpid)
-        pid = str(getpid())
-        open(self.pidfile,'w+').write(f"{pid}\n")
-       
+            process = subprocess.Popen([executable, "-m", DAEMON_NAME])
+            pid = process.pid
+            open(self.pidfile,'w+').write(f"{pid}\n")
+            
+            # self.scheduler = Scheduler()
+        except IOError:
+            stderr.write("Daemonizing went wrong...")
+
     def delpid(self):
         remove(self.pidfile)
 
@@ -64,15 +48,12 @@ class Daemon:
         if pid:
             stderr.write(MESSAGES.IS_ALREADY_RUNNING.value)
             exit(1)
-               
         self.daemonize()
         self.run()
  
     def stop(self):
         try:
-            pf = open(self.pidfile,'r')
-            pid = int(pf.read().strip())
-            pf.close()
+            pid = self.get_daemon_pid()
         except IOError:
             pid = None
        
@@ -99,9 +80,7 @@ class Daemon:
  
     def run(self):
         stdout.write(MESSAGES.IS_STARTED.value)
-        scheduler = Scheduler()
-
-        # scheduler.add(timestamp=1, event=StorageEventInput(name="test event", date_time="2024-10-17 09:57:28", callback=print("kekekekeke")))
+        # scheduler = Scheduler()
 
     def status(self):
         try:
@@ -120,3 +99,12 @@ class Daemon:
             else:
                 stdout.write(f"{ICONS.CRYSTALL_BALL.value} {DAEMON_NAME} has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
         return
+    
+    def list(self):
+        print(f"self.scheduler exists: {self.scheduler is not None}")
+        if self.scheduler:
+            self.scheduler.list()
+        # self.scheduler.list()
+    
+    def raise_if_daemon_is_up(self):
+        return self.get_daemon_pid()
