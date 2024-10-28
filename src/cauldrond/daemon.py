@@ -4,10 +4,11 @@ from time import sleep
 from atexit import register
 from datetime import datetime
 from signal import SIGTERM
+from json import loads
 from cauldrond.constants.env import DAEMON_NAME, PID_FILE, PIPE_FILE
 from cauldrond.constants.enums import ICONS, COMMANDS
 from cauldrond.scheduler import Scheduler
-from cauldrond.constants.enums import MESSAGES
+from cauldrond.constants.enums import MESSAGES, ERROR_MESSAGES
 
 def get_daemon_pid():
     pf = open(PID_FILE,'r')
@@ -49,10 +50,12 @@ class Daemon:
         open(PID_FILE,'w+').write("%s\n" % pid)
         with open(PIPE_FILE, 'w'):
             pass
+        self.pipe_updated_at = path.getmtime(PIPE_FILE)
 
     @staticmethod
     def delpid():
         remove(PID_FILE)
+        remove(PIPE_FILE)
 
     def start(self):
         try:
@@ -91,16 +94,6 @@ class Daemon:
                 stderr.write(err)
                 exit(1)
 
-    def run(self):
-        stdout.write(MESSAGES.IS_STARTED.value)
-        self.scheduler = Scheduler()
-        while True:
-            current_pipe_updated_at = path.getmtime(PIPE_FILE)
-            if current_pipe_updated_at > self.pipe_updated_at:
-                self.read_pipe()
-                self.pipe_updated_at = current_pipe_updated_at
-            sleep(1)
-
     @staticmethod
     def status():
         try:
@@ -121,17 +114,35 @@ class Daemon:
         return
     
     @staticmethod
-    def pipe_command(command):
+    def pipe_command(command_json):
         with open(PIPE_FILE, 'w') as pipe:
-            pipe.write(command + '\n')
+            pipe.write(command_json + '\n')
 
     def read_pipe(self):
         with open(PIPE_FILE, 'r') as pipe:
-            command = pipe.read().strip()
-            if command == COMMANDS.LIST.value:
+            command_json = pipe.read().strip()
+            parsed_command = loads(command_json)
+            if parsed_command["command"] == COMMANDS.LIST.value:
                 self.list()
-                
+            elif parsed_command["command"] == COMMANDS.ADD.value:
+                if self.scheduler is not None:
+                    self.scheduler.set(
+                        event_name=parsed_command["data"]["name"],
+                        date_time=parsed_command["data"]["date_time"],
+                        callback=parsed_command["data"]["callback"])
+                else:
+                    stderr.write(ERROR_MESSAGES.SCHEDULER_NOT_RUNNING.value)
 
     def list(self):
         if self.scheduler:
             self.scheduler.list()
+
+    def run(self):
+        stdout.write(MESSAGES.IS_STARTED.value)
+        self.scheduler = Scheduler()
+        while True:
+            current_pipe_updated_at = path.getmtime(PIPE_FILE)
+            if current_pipe_updated_at > self.pipe_updated_at:
+                self.pipe_updated_at = current_pipe_updated_at
+                self.read_pipe()
+            sleep(0.5)

@@ -1,4 +1,4 @@
-from sys import stderr
+from sys import stderr, stdout
 import re
 from datetime import datetime
 from cauldrond.constants.date_formats import DATE_FORMATS
@@ -44,18 +44,8 @@ class Scheduler:
             self.storage[timestamp] = {}
         self.storage[timestamp][event_name] = lambda: callback
         self.index[event_name] = timestamp
-        # testtesttesttest
-        stderr.write(f"{self.index}")
-        stderr.write(f"===========")
-        stderr.write(f"{self.storage}")
 
     def list(self):
-        # testtesttesttest
-        print("SMDALDSM")
-        stderr.write(f"{self.index}")
-        stderr.write(f"===========")
-        stderr.write(f"{self.storage}")
-
         event_list: list[list] = []
         event_index = 1
         if len(self.index) == 0:
@@ -64,9 +54,10 @@ class Scheduler:
             for event_name, timestamp in self.index.items():
                 event_list.append([event_index, event_name, datetime.fromtimestamp(timestamp).isoformat()])
                 event_index += 1
+            list_str = ""
             for event in event_list:
-                # print('| {:1} | {:^4} | {:>4} |'.format(*event))
-                stderr.write('| {:1} | {:^4} | {:>4} |'.format(*event))
+                list_str += ('| {:1} | {:^4} | {:>4} |\n'.format(*event))
+            stdout.write(list_str)
 
     def remove(self, event_name):
         if event_name not in self.index.keys():
