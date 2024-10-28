@@ -54,9 +54,12 @@ class Scheduler:
             for event_name, timestamp in self.index.items():
                 event_list.append([event_index, event_name, datetime.fromtimestamp(timestamp).isoformat()])
                 event_index += 1
-            list_str = ""
+            list_str = "\n_______________________________________________________\n"
+            list_str += ('| {:^5} | {:^20} | {:^20} |\n'.format(*["Index", "Event Name", "Scheduled Date"]))
+            list_str += "|-----------------------------------------------------|\n"
             for event in event_list:
-                list_str += ('| {:1} | {:^4} | {:>4} |\n'.format(*event))
+                list_str += ('| {:^5} | {:^20} | {:^20} |\n'.format(*event))
+            list_str += "|_______|______________________|______________________|\n"
             stdout.write(list_str)
 
     def remove(self, event_name):

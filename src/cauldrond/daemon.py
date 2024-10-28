@@ -45,7 +45,7 @@ class Daemon:
             stderr.write(f"{ICONS.SKULL.value} Fork #2 failed: {e.errno} {e.strerror}\n")
             exit(1)
         
-        register(self.delpid)
+        register(self.del_tmp_files)
         pid = str(getpid())
         open(PID_FILE,'w+').write("%s\n" % pid)
         with open(PIPE_FILE, 'w'):
@@ -53,7 +53,7 @@ class Daemon:
         self.pipe_updated_at = path.getmtime(PIPE_FILE)
 
     @staticmethod
-    def delpid():
+    def del_tmp_files():
         remove(PID_FILE)
         remove(PIPE_FILE)
 
