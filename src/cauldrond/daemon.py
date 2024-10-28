@@ -4,44 +4,59 @@ from time import sleep
 from atexit import register
 from datetime import datetime
 from signal import SIGTERM
-import subprocess
 from cauldrond.constants.env import PID_FILE, STD_IN, STD_OUT, STD_ERR, DAEMON_NAME
 from cauldrond.constants.enums import ICONS
 from cauldrond.scheduler import Scheduler
 from cauldrond.constants.enums import MESSAGES
 
+def get_daemon_pid():
+    pf = open(PID_FILE,'r')
+    pid = int(pf.read().strip())
+    pf.close()
+    return pid
+
+def raise_if_daemon_is_up():
+    return get_daemon_pid()
+
 class Daemon:
-    def __init__(self, pidfile=PID_FILE, stdin=STD_IN, stdout=STD_OUT, stderr=STD_ERR):
+    def __init__(self, stdin=STD_IN, stdout=STD_OUT, stderr=STD_ERR):
         self.stdin = stdin
         self.stdout = stdout
         self.stderr = stderr
-        self.pidfile = pidfile
         self.scheduler = None
-
-    def get_daemon_pid(self):
-        pf = open(self.pidfile,'r')
-        pid = int(pf.read().strip())
-        pf.close()
-        return pid
 
     def daemonize(self):
         try:
-            process = subprocess.Popen([executable, "-m", DAEMON_NAME])
-            pid = process.pid
-            open(self.pidfile,'w+').write(f"{pid}\n")
-            
-            # self.scheduler = Scheduler()
-        except IOError:
-            stderr.write("Daemonizing went wrong...")
+            pid = fork()
+            if pid > 0:
+                exit(0)
+        except OSError as e:
+            stderr.write(f"{ICONS.SKULL.value} Fork #1 failed: {e.errno} {e.strerror}\n")
+            exit(1)
+       
+        chdir("/")
+        setsid()
+        umask(0)
+       
+        try:
+            pid = fork()
+            if pid > 0:
+                exit(0)
+        except OSError as e:
+            stderr.write(f"{ICONS.SKULL.value} Fork #2 failed: {e.errno} {e.strerror}\n")
+            exit(1)
+        
+        register(self.delpid)
+        pid = str(getpid())
+        open(PID_FILE,'w+').write("%s\n" % pid)
 
-    def delpid(self):
-        remove(self.pidfile)
+    @staticmethod
+    def delpid():
+        remove(PID_FILE)
 
     def start(self):
         try:
-            pf = open(self.pidfile,'r')
-            pid = int(pf.read().strip())
-            pf.close()
+            pid = get_daemon_pid()
         except IOError:
             pid = None
 
@@ -50,15 +65,16 @@ class Daemon:
             exit(1)
         self.daemonize()
         self.run()
- 
-    def stop(self):
+
+    @staticmethod
+    def stop():
         try:
-            pid = self.get_daemon_pid()
+            pid = get_daemon_pid()
         except IOError:
             pid = None
-       
+        
         if not pid:
-            stderr.write(f"{ICONS.CRYSTALL_BALL.value} pidfile {self.pidfile} does not exist. {DAEMON_NAME} not running?\n")
+            stderr.write(f"{ICONS.CRYSTALL_BALL.value} pidfile {PID_FILE} does not exist. {DAEMON_NAME} not running?\n")
             return
 
         try:
@@ -68,23 +84,23 @@ class Daemon:
         except OSError as err:
             err = str(err)
             if err.find("No such process") > 0:
-                if path.exists(self.pidfile):
-                    remove(self.pidfile)
+                if path.exists(PID_FILE):
+                    remove(PID_FILE)
             else:
-                print(err)
+                stderr.write(err)
                 exit(1)
- 
-    def restart(self):
-        self.stop()
-        self.start()
- 
+
     def run(self):
         stdout.write(MESSAGES.IS_STARTED.value)
+        self.scheduler = Scheduler()
+        while True:
+            sleep(1)
         # scheduler = Scheduler()
 
-    def status(self):
+    @staticmethod
+    def status():
         try:
-            c_time = path.getctime(self.pidfile) 
+            c_time = path.getctime(PID_FILE)
         except IOError:
             c_time = None
     
@@ -101,10 +117,6 @@ class Daemon:
         return
     
     def list(self):
-        print(f"self.scheduler exists: {self.scheduler is not None}")
         if self.scheduler:
             self.scheduler.list()
-        # self.scheduler.list()
     
-    def raise_if_daemon_is_up(self):
-        return self.get_daemon_pid()
