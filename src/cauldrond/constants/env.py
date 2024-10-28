@@ -1,5 +1,3 @@
 DAEMON_NAME="cauldrond"
-PID_FILE="/tmp/cauldrond.pid"
-STD_IN="/dev/null"
-STD_OUT="/dev/null"
-STD_ERR="/dev/null"
+PID_FILE=f"/tmp/{DAEMON_NAME}.pid"
+PIPE_FILE=f"/tmp/{DAEMON_NAME}.pipe"

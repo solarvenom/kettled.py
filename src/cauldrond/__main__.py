@@ -20,8 +20,8 @@ def main() -> None:
                 stderr.write(MESSAGES.IS_DOWN.value)
         elif COMMANDS.STATUS.value == argv[1]:
             Daemon.status()
-        # elif COMMANDS.LIST.value == argv[1]:
-        #     daemon.list()
+        elif COMMANDS.LIST.value == argv[1]:
+            Daemon.pipe_command(COMMANDS.LIST.value)
         else:
             stderr.write(ERROR_MESSAGES.UNKNOWN_COMMAND.value)
             stderr.write(MESSAGES.USAGE.value)
