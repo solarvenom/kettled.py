@@ -12,6 +12,7 @@ class COMMANDS(Enum):
     STATUS = "status"
     LIST = "list"
     ADD = "add"
+    DELETE = "delete"
 
 class ERROR_MESSAGES(Enum):
     UNSUPPORTED_DATE_FORMAT = f"{ICONS.SKULL.value}  unsupported date format.\n"

@@ -1,7 +1,7 @@
 from sys import exit, argv, stderr
 from json import dumps
 from cauldrond.daemon import Daemon, raise_if_daemon_is_up, get_daemon_pid
-from cauldrond.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES
+from cauldrond.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, ICONS
 import inspect
 
 def main() -> None:
@@ -30,11 +30,23 @@ def main() -> None:
         elif COMMANDS.ADD.value == argv[1]:
             command, data = {}, {}
             command["command"] = COMMANDS.ADD.value
-            data["date_time"] = "2024-10-17 09:57:28"
-            data["name"] = "test event"
+            # data["date_time"] = "2024-10-17 09:57:28"
+            # data["event_name"] = "test event"
+            # def callback():
+            #     return print("test_cb_value")
+            data["event_name"] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event name: ")
+            data["date_time"] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event scheduled date: ")
+            event_callback = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event callback: ")
             def callback():
-                return print("test_cb_value")
+                return event_callback
             data["callback"] = inspect.getsource(callback)
+            command["data"] = data
+            command_json = dumps(command)
+            Daemon.pipe_command(command_json)
+        elif COMMANDS.DELETE.value == argv[1]:
+            command, data = {}, {}
+            command["command"] = COMMANDS.DELETE.value
+            data["event_name"] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event name to delete: ")
             command["data"] = data
             command_json = dumps(command)
             Daemon.pipe_command(command_json)

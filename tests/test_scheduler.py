@@ -29,8 +29,10 @@ def test_set():
 #     ISOFORMAT = datetime.fromtimestamp(seeds.EVENT_TIMESTAMP).isoformat()
 #     test_instance.list()
 #     captured = capsys.readouterr()
-#     # assert captured.out == f"| 1 | {seeds.EVENT_NAME} | {ISOFORMAT} |\n"
-#     assert captured.err == f"| 1 | {seeds.EVENT_NAME} | {ISOFORMAT} |\n"
+#     expected_stdout = "\n_______________________________________________________\n"
+#     expected_stdout += ('| {:^5} | {:^20} | {:^20} |\n'.format(*["1", seeds.EVENT_NAME, ISOFORMAT]))
+#     expected_stdout += "|_______|______________________|______________________|\n"
+#     assert captured.out == expected_stdout
 
 def test_remove():
     test_instance = init_scheduler_set_event()

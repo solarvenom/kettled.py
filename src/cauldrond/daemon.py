@@ -122,16 +122,19 @@ class Daemon:
         with open(PIPE_FILE, 'r') as pipe:
             command_json = pipe.read().strip()
             parsed_command = loads(command_json)
-            if parsed_command["command"] == COMMANDS.LIST.value:
-                self.list()
-            elif parsed_command["command"] == COMMANDS.ADD.value:
-                if self.scheduler is not None:
+            if self.scheduler is not None:
+                if parsed_command["command"] == COMMANDS.LIST.value:
+                    self.list()
+                elif parsed_command["command"] == COMMANDS.ADD.value:
                     self.scheduler.set(
-                        event_name=parsed_command["data"]["name"],
+                        event_name=parsed_command["data"]["event_name"],
                         date_time=parsed_command["data"]["date_time"],
                         callback=parsed_command["data"]["callback"])
-                else:
-                    stderr.write(ERROR_MESSAGES.SCHEDULER_NOT_RUNNING.value)
+                elif parsed_command["command"] == COMMANDS.DELETE.value:
+                    self.scheduler.remove(event_name=parsed_command["data"]["event_name"])
+            else:
+                stderr.write(ERROR_MESSAGES.SCHEDULER_NOT_RUNNING.value)
+            
 
     def list(self):
         if self.scheduler:
