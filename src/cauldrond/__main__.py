@@ -1,7 +1,7 @@
 from sys import exit, argv, stderr
 from json import dumps
-from cauldrond.daemon import Daemon, raise_if_daemon_is_up, get_daemon_pid
-from cauldrond.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, ICONS
+from cauldrond.daemon import Daemon, get_daemon_pid
+from cauldrond.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, ICONS, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS
 import inspect
 import logging
 
@@ -9,7 +9,7 @@ def main() -> None:
     if len(argv) == 2:
         if COMMANDS.START.value == argv[1]:
             try:
-                raise_if_daemon_is_up()
+                get_daemon_pid()
                 stderr.write(MESSAGES.IS_ALREADY_RUNNING.value)
             except IOError:
                 daemon = Daemon()
@@ -36,7 +36,7 @@ def main() -> None:
                 get_daemon_pid()
                 command, data = {}, {}
                 command["command"] = COMMANDS.ADD.value
-                # data["date_time"] = "2024-10-17 09:57:28"
+                # data["date_time"] = "2286-11-20 15:28:45"
                 # data["event_name"] = "test event"
                 # def callback():
                 #     return print("test_cb_value")
@@ -66,12 +66,12 @@ def main() -> None:
             try:
                 get_daemon_pid()
                 command, data = {}, {}
-                command["command"] = COMMANDS.UPDATE.value
+                command[COMMAND_MESSAGE.COMMAND.value] = COMMANDS.UPDATE.value
                 event_name = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the name of event be modified: ")
                 if event_name == "":
                     stderr.write(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
                     return
-                data["event_name"] = event_name
+                data[EVENT_PARAMETERS.EVENT_NAME.value] = event_name
                 new_event_name = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the new event name or leave blank to leave unchanged: ")
                 new_date_time = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the new event schdeuled date or leave blank to leave unchanged: ")
                 new_callback = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the new event callback or leave blank to leave unchanged: ")
@@ -79,15 +79,14 @@ def main() -> None:
                     stderr.write(ERROR_MESSAGES.INSUFFICIENT_UPDATE_ARGS.value)
                     return
                 if new_event_name != "":
-                    data["new_event_name"] = new_date_time
+                    data[UPDATE_EVENT_PARAMETERS.NEW_EVENT_NAME.value] = new_event_name
                 if new_date_time != "":
-                    data["new_date_time"] = new_date_time
+                    data[UPDATE_EVENT_PARAMETERS.NEW_DATE_TIME.value] = new_date_time
                 if new_callback != "":
-                    data["new_callback"] = new_callback
-                command["data"] = data
+                    data[UPDATE_EVENT_PARAMETERS.NEW_CALLBACK.value] = new_callback
+                command[COMMAND_MESSAGE.DATA.value] = data
                 command_json = dumps(command)
                 Daemon.pipe_command(command_json)
-                print("UPDATE PIPE PIPED")
             except ValueError as error:
                 logging.exception(error)
             except IOError:

@@ -8,16 +8,13 @@ from json import loads
 from cauldrond.constants.env import DAEMON_NAME, PID_FILE, PIPE_FILE
 from cauldrond.constants.enums import ICONS, COMMANDS
 from cauldrond.scheduler import Scheduler
-from cauldrond.constants.enums import MESSAGES, ERROR_MESSAGES
+from cauldrond.constants.enums import MESSAGES, ERROR_MESSAGES, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS
 
 def get_daemon_pid():
     pf = open(PID_FILE,'r')
     pid = int(pf.read().strip())
     pf.close()
     return pid
-
-def raise_if_daemon_is_up():
-    return get_daemon_pid()
 
 class Daemon:
     def __init__(self):
@@ -123,23 +120,26 @@ class Daemon:
             command_json = pipe.read().strip()
             parsed_command = loads(command_json)
             if self.scheduler is not None:
-                if parsed_command["command"] == COMMANDS.LIST.value:
+                if parsed_command[COMMAND_MESSAGE.COMMAND.value] == COMMANDS.LIST.value:
                     self.list()
-                elif parsed_command["command"] == COMMANDS.ADD.value:
-                    self.scheduler.set(
-                        event_name=parsed_command["data"]["event_name"],
-                        date_time=parsed_command["data"]["date_time"],
-                        callback=parsed_command["data"]["callback"])
-                elif parsed_command["command"] == COMMANDS.DELETE.value:
-                    self.scheduler.remove(event_name=parsed_command["data"]["event_name"])
-                elif parsed_command["command"] == COMMANDS.UPDATE.value:
-                    fields_to_update = parsed_command["data"].keys()
+                elif parsed_command[COMMAND_MESSAGE.COMMAND.value] == COMMANDS.ADD.value:
                     try:
+                        self.scheduler.set(
+                            event_name=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.EVENT_NAME.value],
+                            date_time=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.DATE_TIME.value],
+                            callback=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.CALLBACK.value])
+                    except ValueError as error:
+                        stderr.write(str(error))
+                elif parsed_command[COMMAND_MESSAGE.COMMAND.value] == COMMANDS.DELETE.value:
+                    self.scheduler.remove(event_name=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.EVENT_NAME.value])
+                elif parsed_command[COMMAND_MESSAGE.COMMAND.value] == COMMANDS.UPDATE.value:
+                    try:
+                        fields_to_update = parsed_command[COMMAND_MESSAGE.DATA.value].keys()
                         self.scheduler.update(
-                            event_name=parsed_command["data"]["event_name"],
-                            new_event_name=parsed_command["data"]["new_event_name"] if "new_event_name" in fields_to_update else None,
-                            new_date_time=parsed_command["data"]["new_date_time"] if "new_date_time" in fields_to_update else None,
-                            new_callback=parsed_command["data"]["new_callback"] if "new_callback" in fields_to_update else None)
+                            event_name=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.EVENT_NAME.value],
+                            new_event_name=parsed_command[COMMAND_MESSAGE.DATA.value][UPDATE_EVENT_PARAMETERS.NEW_EVENT_NAME.value] if UPDATE_EVENT_PARAMETERS.NEW_EVENT_NAME.value in fields_to_update else None,
+                            new_date_time=parsed_command[COMMAND_MESSAGE.DATA.value][UPDATE_EVENT_PARAMETERS.NEW_DATE_TIME.value] if UPDATE_EVENT_PARAMETERS.NEW_DATE_TIME.value in fields_to_update else None,
+                            new_callback=parsed_command[COMMAND_MESSAGE.DATA.value][UPDATE_EVENT_PARAMETERS.NEW_CALLBACK.value] if UPDATE_EVENT_PARAMETERS.NEW_CALLBACK.value in fields_to_update else None)
                     except ValueError as error:
                         stderr.write(str(error))
             else:
