@@ -13,6 +13,7 @@ class COMMANDS(Enum):
     LIST = "list"
     ADD = "add"
     DELETE = "delete"
+    UPDATE = "update"
 
 class ERROR_MESSAGES(Enum):
     UNSUPPORTED_DATE_FORMAT = f"{ICONS.SKULL.value}  unsupported date format.\n"
@@ -24,7 +25,7 @@ class ERROR_MESSAGES(Enum):
     INSUFFICIENT_UPDATE_ARGS = f"{ICONS.SKULL.value}  event_name and new event_date or callback is required.\n"
     EVENT_NAME_NOT_FOUND = f"{ICONS.SKULL.value}  event with specified name not found.\n"
     NO_EVENTS_SCHEDULED = f"{ICONS.SKULL.value}  no events scheduled at the moment.\n"
-    SCHEDULER_NOT_RUNNING = f"{ICONS.SKULL.value} scheduler not running...\n"
+    SCHEDULER_NOT_RUNNING = f"{ICONS.SKULL.value}  scheduler not running...\n"
 
 class MESSAGES(Enum):
     USAGE = f"{ICONS.CRYSTALL_BALL.value} available commands: {COMMANDS.START.value} | {COMMANDS.STOP.value} | {COMMANDS.RESTART.value} | {COMMANDS.STATUS.value}\n"

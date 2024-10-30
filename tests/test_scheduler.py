@@ -57,7 +57,8 @@ def test_update():
     assert test_instance.index[seeds.EVENT_NAME] == seeds.EVENT_TIMESTAMP
     test_instance.update(
         event_name=seeds.EVENT_NAME, 
-        date_time=seeds.UPDATED_EVENT_DATE,
-        callback=seeds.updated_callback())
-    assert test_instance.storage[seeds.UPDATED_EVENT_TIMESTAMP][seeds.EVENT_NAME]() == seeds.UPDATED_EVENT_CALLBACK_VALUE
-    assert test_instance.index[seeds.EVENT_NAME] == seeds.UPDATED_EVENT_TIMESTAMP
+        new_event_name = seeds.UPDATED_EVENT_NAME,
+        new_date_time=seeds.UPDATED_EVENT_DATE,
+        new_callback=seeds.updated_callback())
+    assert test_instance.storage[seeds.UPDATED_EVENT_TIMESTAMP][seeds.UPDATED_EVENT_NAME]() == seeds.UPDATED_EVENT_CALLBACK_VALUE
+    assert test_instance.index[seeds.UPDATED_EVENT_NAME] == seeds.UPDATED_EVENT_TIMESTAMP

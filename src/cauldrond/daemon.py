@@ -132,6 +132,16 @@ class Daemon:
                         callback=parsed_command["data"]["callback"])
                 elif parsed_command["command"] == COMMANDS.DELETE.value:
                     self.scheduler.remove(event_name=parsed_command["data"]["event_name"])
+                elif parsed_command["command"] == COMMANDS.UPDATE.value:
+                    fields_to_update = parsed_command["data"].keys()
+                    try:
+                        self.scheduler.update(
+                            event_name=parsed_command["data"]["event_name"],
+                            new_event_name=parsed_command["data"]["new_event_name"] if "new_event_name" in fields_to_update else None,
+                            new_date_time=parsed_command["data"]["new_date_time"] if "new_date_time" in fields_to_update else None,
+                            new_callback=parsed_command["data"]["new_callback"] if "new_callback" in fields_to_update else None)
+                    except ValueError as error:
+                        stderr.write(str(error))
             else:
                 stderr.write(ERROR_MESSAGES.SCHEDULER_NOT_RUNNING.value)
             
