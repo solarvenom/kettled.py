@@ -26,7 +26,7 @@ def main() -> None:
             try:
                 get_daemon_pid()
                 command = {}
-                command["command"] = COMMANDS.LIST.value
+                command[COMMAND_MESSAGE.COMMAND.value] = COMMANDS.LIST.value
                 command_json = dumps(command)
                 Daemon.pipe_command(command_json)
             except IOError:
@@ -35,18 +35,18 @@ def main() -> None:
             try:
                 get_daemon_pid()
                 command, data = {}, {}
-                command["command"] = COMMANDS.ADD.value
+                command[COMMAND_MESSAGE.COMMAND.value] = COMMANDS.ADD.value
                 # data["date_time"] = "2286-11-20 15:28:45"
                 # data["event_name"] = "test event"
                 # def callback():
                 #     return print("test_cb_value")
-                data["event_name"] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event name: ")
-                data["date_time"] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event scheduled date: ")
+                data[EVENT_PARAMETERS.EVENT_NAME.value] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event name: ")
+                data[EVENT_PARAMETERS.DATE_TIME.value] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event scheduled date: ")
                 event_callback = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event callback: ")
                 def callback():
                     return event_callback
-                data["callback"] = inspect.getsource(callback)
-                command["data"] = data
+                data[EVENT_PARAMETERS.CALLBACK.value] = inspect.getsource(callback)
+                command[COMMAND_MESSAGE.DATA.value] = data
                 command_json = dumps(command)
                 Daemon.pipe_command(command_json)
             except IOError:
@@ -55,9 +55,9 @@ def main() -> None:
             try:
                 get_daemon_pid()
                 command, data = {}, {}
-                command["command"] = COMMANDS.DELETE.value
-                data["event_name"] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the name of event to be deleted: ")
-                command["data"] = data
+                command[COMMAND_MESSAGE.COMMAND.value] = COMMANDS.DELETE.value
+                data[EVENT_PARAMETERS.EVENT_NAME.value] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the name of event to be deleted: ")
+                command[COMMAND_MESSAGE.DATA.value] = data
                 command_json = dumps(command)
                 Daemon.pipe_command(command_json)
             except IOError as e:
