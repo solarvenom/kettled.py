@@ -21,7 +21,7 @@ class ERROR_MESSAGES(Enum):
     MISSING_EVENT_NAME = f"{ICONS.SKULL.value}  event_name is required.\n"
     MISSING_EVENT_DATETIME = f"{ICONS.SKULL.value}  event_date and time is required.\n"
     MISSING_EVENT_CALLBACK = f"{ICONS.SKULL.value}  callback is required.\n"
-    NAME_NOT_UNIQUE = f"{ICONS.SKULL.value}  event_name must be unique.\n"
+    EVENT_NAME_NOT_UNIQUE = f"{ICONS.SKULL.value}  event_name must be unique.\n"
     INSUFFICIENT_UPDATE_ARGS = f"{ICONS.SKULL.value}  event_name and new event_date or callback is required.\n"
     EVENT_NAME_NOT_FOUND = f"{ICONS.SKULL.value}  event with specified name not found.\n"
     NO_EVENTS_SCHEDULED = f"{ICONS.SKULL.value}  no events scheduled at the moment.\n"

@@ -11,6 +11,7 @@ class Scheduler:
     
     @staticmethod
     def get_timestamp(date) -> int:
+        # TODO: refactor this
         try:
             date_time = int(date)
             if datetime.timestamp(datetime.now()) > date_time:
@@ -36,23 +37,20 @@ class Scheduler:
             EVENT_PARAMETERS.DATE_TIME.value: timestamp, 
             EVENT_PARAMETERS.CALLBACK.value: callback }
 
-    def set(self, event_name, date_time, callback):
-        try:
-            if event_name is None or event_name == "":
-                raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
-            if event_name in self.index:
-                raise ValueError(ERROR_MESSAGES.NAME_NOT_UNIQUE.value)
-            if date_time is None:
-                raise ValueError(ERROR_MESSAGES.MISSING_EVENT_DATETIME.value)
-            if callback is None:
-                raise ValueError(ERROR_MESSAGES.MISSING_EVENT_CALLBACK.value)
-            timestamp = self.get_timestamp(date_time)
-            if timestamp not in self.storage:
-                self.storage[timestamp] = {}
-            self.storage[timestamp][event_name] = lambda: callback
-            self.index[event_name] = timestamp
-        except ValueError as error:
-            stderr.write(str(error))
+    def set(self, event_name, date_time, callback):        
+        if event_name is None or event_name == "":
+            raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
+        if event_name in self.index.keys():
+            raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_UNIQUE.value)
+        if date_time is None:
+            raise ValueError(ERROR_MESSAGES.MISSING_EVENT_DATETIME.value)
+        if callback is None:
+            raise ValueError(ERROR_MESSAGES.MISSING_EVENT_CALLBACK.value)
+        timestamp = self.get_timestamp(date_time)
+        if timestamp not in self.storage:
+            self.storage[timestamp] = {}
+        self.storage[timestamp][event_name] = lambda: callback
+        self.index[event_name] = timestamp
 
     def list(self):
         event_list: list[list] = []
@@ -72,33 +70,27 @@ class Scheduler:
             stdout.write(list_str)
 
     def remove(self, event_name):
-        try:
-            if event_name not in self.index.keys():
-                raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
-            event_timestamp = self.index[event_name]
-            if len(self.storage[event_timestamp]) > 1:
-                self.storage[event_timestamp].pop(event_name)
-            else:
-                self.storage.pop(event_timestamp)
-            self.index.pop(event_name)
-        except ValueError as error:
-            stderr.write(str(error))
+        if event_name not in self.index.keys():
+            raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
+        event_timestamp = self.index[event_name]
+        if len(self.storage[event_timestamp]) > 1:
+            self.storage[event_timestamp].pop(event_name)
+        else:
+            self.storage.pop(event_timestamp)
+        self.index.pop(event_name)
 
     def update(self, event_name, new_event_name=None, new_date_time=None, new_callback=None):
-        try:
-            if event_name not in self.index.keys():
-                raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
-            event_to_update = self.get(event_name)
-            if new_event_name is not None and new_event_name is not "":
-                event_to_update[EVENT_PARAMETERS.EVENT_NAME.value] = new_event_name
-            if new_date_time is not None and new_date_time is not"":
-                event_to_update[EVENT_PARAMETERS.DATE_TIME.value] = new_date_time
-            if new_callback is not None and new_callback is not "":
-                event_to_update[EVENT_PARAMETERS.CALLBACK.value] = new_callback
-            self.remove(event_name)
-            self.set(
-                event_name=event_to_update[EVENT_PARAMETERS.EVENT_NAME.value], 
-                date_time=event_to_update[EVENT_PARAMETERS.DATE_TIME.value],
-                callback=event_to_update[EVENT_PARAMETERS.CALLBACK.value])
-        except ValueError as error:
-            stderr.write(str(error))
+        if event_name not in self.index.keys():
+            raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
+        event_to_update = self.get(event_name)
+        if new_event_name is not None and new_event_name is not "":
+            event_to_update[EVENT_PARAMETERS.EVENT_NAME.value] = new_event_name
+        if new_date_time is not None and new_date_time is not"":
+            event_to_update[EVENT_PARAMETERS.DATE_TIME.value] = new_date_time
+        if new_callback is not None and new_callback is not "":
+            event_to_update[EVENT_PARAMETERS.CALLBACK.value] = new_callback
+        self.remove(event_name)
+        self.set(
+            event_name=event_to_update[EVENT_PARAMETERS.EVENT_NAME.value], 
+            date_time=event_to_update[EVENT_PARAMETERS.DATE_TIME.value],
+            callback=event_to_update[EVENT_PARAMETERS.CALLBACK.value])
