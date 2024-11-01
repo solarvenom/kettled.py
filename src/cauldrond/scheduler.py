@@ -28,6 +28,8 @@ class Scheduler:
             return matched_format
 
     def get(self, event_name):
+        if event_name is None or event_name is "":
+            raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
         timestamp = self.index[event_name]
         if timestamp is None:
             raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
@@ -80,12 +82,14 @@ class Scheduler:
         self.index.pop(event_name)
 
     def update(self, event_name, new_event_name=None, new_date_time=None, new_callback=None):
+        if event_name is None or event_name == "":
+            raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
         if event_name not in self.index.keys():
             raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
         event_to_update = self.get(event_name)
         if new_event_name is not None and new_event_name is not "":
             event_to_update[EVENT_PARAMETERS.EVENT_NAME.value] = new_event_name
-        if new_date_time is not None and new_date_time is not"":
+        if new_date_time is not None and new_date_time is not "":
             event_to_update[EVENT_PARAMETERS.DATE_TIME.value] = new_date_time
         if new_callback is not None and new_callback is not "":
             event_to_update[EVENT_PARAMETERS.CALLBACK.value] = new_callback

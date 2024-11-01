@@ -11,6 +11,6 @@ def init_scheduler_set_event(event_datetime):
     )
     return test_instance
 
-def get_tomorrows_datetime():
-    tomorrows_date_time = datetime.now() + timedelta(days=1)
+def get_future_datetime(days_to_skip):
+    tomorrows_date_time = datetime.now() + timedelta(days=days_to_skip)
     return datetime.strptime(str(tomorrows_date_time), "%Y-%m-%d %H:%M:%S.%f")

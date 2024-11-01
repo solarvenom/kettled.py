@@ -1,10 +1,10 @@
 from datetime import datetime
 from cauldrond.scheduler import Scheduler
 from cauldrond.constants.enums import EVENT_PARAMETERS
-from tests.utils import get_tomorrows_datetime
+from tests.utils import get_future_datetime
 import tests.seeds as seeds
 
-tomorrows_date_time = get_tomorrows_datetime()
+tomorrows_date_time = get_future_datetime(1)
 tomorrows_timestamp = int(datetime.timestamp(tomorrows_date_time))
 
 def test_get_success_case():

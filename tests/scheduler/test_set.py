@@ -2,11 +2,10 @@ import pytest
 from datetime import datetime
 from cauldrond.scheduler import Scheduler
 from cauldrond.constants.enums import ERROR_MESSAGES
-from tests.utils import get_tomorrows_datetime
+from tests.utils import get_future_datetime
 import tests.seeds as seeds
 
-
-tomorrows_datetime = get_tomorrows_datetime()
+tomorrows_datetime = get_future_datetime(1)
 tomorrows_timestamp = int(datetime.timestamp(tomorrows_datetime))
 
 def test_set_event_success_case():
