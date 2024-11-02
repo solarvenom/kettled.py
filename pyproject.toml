@@ -3,7 +3,7 @@ name = "kettled"
 description = "A simple, ligthweight and secure python scheduler for UNIX systems that does not depend on any third-party packages."
 readme = "README.md"
 requires-python = ">=3.11"
-authors = [{ name = "solarvenom" }]
+authors = [{ name = "solarvenom", email = "contact@solarvenom.com"  }]
 license = { text = "MIT" }
 dynamic = ["version"]
 
