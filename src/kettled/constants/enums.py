@@ -2,7 +2,7 @@ from enum import Enum
 from kettled.constants.env import DAEMON_NAME
 
 class ICONS(Enum):
-    CRYSTALL_BALL = "🔮"
+    KETTLE = "🫖"
     SKULL = "☠️"
 
 class COMMANDS(Enum):
@@ -29,11 +29,11 @@ class ERROR_MESSAGES(Enum):
     TIMESTAMP_OUTDATED = f"{ICONS.SKULL.value}  date_time must specify a future date.\n"
 
 class MESSAGES(Enum):
-    USAGE = f"{ICONS.CRYSTALL_BALL.value} available commands: {COMMANDS.START.value} | {COMMANDS.STOP.value} | {COMMANDS.RESTART.value} | {COMMANDS.STATUS.value}\n"
-    IS_ALREADY_RUNNING = f"{ICONS.CRYSTALL_BALL.value} {DAEMON_NAME} alredy running. check uptime with '{DAEMON_NAME} status'.\n"
-    IS_STARTED = f"{ICONS.CRYSTALL_BALL.value} {DAEMON_NAME} started.\n"
-    IS_DOWN = f"{ICONS.CRYSTALL_BALL.value} {DAEMON_NAME} is down.\n"
-    EVENT_ADDED = f"{ICONS.CRYSTALL_BALL.value} event scheduled.\n"
+    USAGE = f"{ICONS.KETTLE.value} available commands: {COMMANDS.START.value} | {COMMANDS.STOP.value} | {COMMANDS.RESTART.value} | {COMMANDS.STATUS.value}\n"
+    IS_ALREADY_RUNNING = f"{ICONS.KETTLE.value} {DAEMON_NAME} alredy running. check uptime with '{DAEMON_NAME} status'.\n"
+    IS_STARTED = f"{ICONS.KETTLE.value} {DAEMON_NAME} started.\n"
+    IS_DOWN = f"{ICONS.KETTLE.value} {DAEMON_NAME} is down.\n"
+    EVENT_ADDED = f"{ICONS.KETTLE.value} event scheduled.\n"
 
 class EVENT_PARAMETERS(Enum):
     EVENT_NAME = "event_name"
@@ -48,3 +48,13 @@ class UPDATE_EVENT_PARAMETERS(Enum):
 class COMMAND_MESSAGE(Enum):
     COMMAND = "command"
     DATA = "data"
+
+class TERMINAL_PROMPTS(Enum):
+    ADD_EVENT_NAME = f"{ICONS.KETTLE.value} Please enter event name: "
+    ADD_EVENT_DATE_TIME = f"{ICONS.KETTLE.value} Please enter event scheduled date: "
+    ADD_EVENT_CALLBACK = f"{ICONS.KETTLE.value} Please enter event callback: "
+    DELETE_EVENT_NAME = f"{ICONS.KETTLE.value} Please enter the name of event to be deleted: "
+    UPDATE_EVENT_NAME = f"{ICONS.KETTLE.value} Please enter the name of event be modified: "
+    UPDATE_NEW_EVENT_NAME = f"{ICONS.KETTLE.value} Please enter the new event name or leave blank to leave unchanged: "
+    UPDATE_NEW_DATE_TIME = f"{ICONS.KETTLE.value} Please enter the new event schdeuled date or leave blank to leave unchanged: "
+    UPDATE_NEW_CALLBACK = f"{ICONS.KETTLE.value} Please enter the new event callback or leave blank to leave unchanged: "

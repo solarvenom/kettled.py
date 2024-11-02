@@ -1,7 +1,7 @@
 from sys import exit, argv, stderr
 from json import dumps
 from kettled.daemon import Daemon, get_daemon_pid
-from kettled.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, ICONS, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS
+from kettled.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS, TERMINAL_PROMPTS
 import inspect
 import logging
 
@@ -40,9 +40,9 @@ def main() -> None:
                 # data["event_name"] = "test event"
                 # def callback():
                 #     return print("test_cb_value")
-                data[EVENT_PARAMETERS.EVENT_NAME.value] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event name: ")
-                data[EVENT_PARAMETERS.DATE_TIME.value] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event scheduled date: ")
-                event_callback = input(f"{ICONS.CRYSTALL_BALL.value} Please enter event callback: ")
+                data[EVENT_PARAMETERS.EVENT_NAME.value] = input(TERMINAL_PROMPTS.ADD_EVENT_NAME.value)
+                data[EVENT_PARAMETERS.DATE_TIME.value] = input(TERMINAL_PROMPTS.ADD_EVENT_DATE_TIME.value)
+                event_callback = input(TERMINAL_PROMPTS.ADD_EVENT_CALLBACK.value)
                 def callback():
                     return event_callback
                 data[EVENT_PARAMETERS.CALLBACK.value] = inspect.getsource(callback)
@@ -56,7 +56,7 @@ def main() -> None:
                 get_daemon_pid()
                 command, data = {}, {}
                 command[COMMAND_MESSAGE.COMMAND.value] = COMMANDS.DELETE.value
-                data[EVENT_PARAMETERS.EVENT_NAME.value] = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the name of event to be deleted: ")
+                data[EVENT_PARAMETERS.EVENT_NAME.value] = input(TERMINAL_PROMPTS.DELETE_EVENT_NAME.value)
                 command[COMMAND_MESSAGE.DATA.value] = data
                 command_json = dumps(command)
                 Daemon.pipe_command(command_json)
@@ -67,14 +67,14 @@ def main() -> None:
                 get_daemon_pid()
                 command, data = {}, {}
                 command[COMMAND_MESSAGE.COMMAND.value] = COMMANDS.UPDATE.value
-                event_name = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the name of event be modified: ")
+                event_name = input(TERMINAL_PROMPTS.UPDATE_EVENT_NAME.value)
                 if event_name == "":
                     stderr.write(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
                     return
                 data[EVENT_PARAMETERS.EVENT_NAME.value] = event_name
-                new_event_name = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the new event name or leave blank to leave unchanged: ")
-                new_date_time = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the new event schdeuled date or leave blank to leave unchanged: ")
-                new_callback = input(f"{ICONS.CRYSTALL_BALL.value} Please enter the new event callback or leave blank to leave unchanged: ")
+                new_event_name = input(TERMINAL_PROMPTS.UPDATE_NEW_EVENT_NAME.value)
+                new_date_time = input(TERMINAL_PROMPTS.UPDATE_NEW_DATE_TIME.value)
+                new_callback = input(TERMINAL_PROMPTS.UPDATE_NEW_CALLBACK.value)
                 if new_event_name == "" and new_date_time == "" and new_callback == "":
                     stderr.write(ERROR_MESSAGES.INSUFFICIENT_UPDATE_ARGS.value)
                     return
