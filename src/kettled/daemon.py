@@ -5,10 +5,10 @@ from atexit import register
 from datetime import datetime
 from signal import SIGTERM
 from json import loads
-from cauldrond.constants.env import DAEMON_NAME, PID_FILE, PIPE_FILE
-from cauldrond.constants.enums import ICONS, COMMANDS
-from cauldrond.scheduler import Scheduler
-from cauldrond.constants.enums import MESSAGES, ERROR_MESSAGES, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS
+from kettled.constants.env import DAEMON_NAME, PID_FILE, PIPE_FILE
+from kettled.constants.enums import ICONS, COMMANDS
+from kettled.scheduler import Scheduler
+from kettled.constants.enums import MESSAGES, ERROR_MESSAGES, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS
 
 def get_daemon_pid():
     pf = open(PID_FILE,'r')

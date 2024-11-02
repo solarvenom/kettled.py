@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
-from cauldrond.scheduler import Scheduler
-from cauldrond.constants.enums import ERROR_MESSAGES
+from kettled.scheduler import Scheduler
+from kettled.constants.enums import ERROR_MESSAGES
 from tests.utils import get_future_datetime
 import tests.seeds as seeds
 

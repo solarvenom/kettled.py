@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from cauldrond.scheduler import Scheduler
+from kettled.scheduler import Scheduler
 import tests.seeds as seeds
 
 def init_scheduler_set_event(event_datetime):

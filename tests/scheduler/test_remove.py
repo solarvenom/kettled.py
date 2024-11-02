@@ -1,6 +1,6 @@
 from datetime import datetime
 from tests.utils import init_scheduler_set_event, get_future_datetime
-from cauldrond.constants.enums import ERROR_MESSAGES
+from kettled.constants.enums import ERROR_MESSAGES
 import tests.seeds as seeds
 
 tomorrows_datetime = get_future_datetime(1)

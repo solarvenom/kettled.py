@@ -1,7 +1,7 @@
 from sys import exit, argv, stderr
 from json import dumps
-from cauldrond.daemon import Daemon, get_daemon_pid
-from cauldrond.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, ICONS, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS
+from kettled.daemon import Daemon, get_daemon_pid
+from kettled.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, ICONS, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS
 import inspect
 import logging
 

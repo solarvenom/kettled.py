@@ -1,5 +1,5 @@
 from enum import Enum
-from cauldrond.constants.env import DAEMON_NAME
+from kettled.constants.env import DAEMON_NAME
 
 class ICONS(Enum):
     CRYSTALL_BALL = "🔮"

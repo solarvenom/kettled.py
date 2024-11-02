@@ -1,5 +1,5 @@
 from datetime import datetime
-from cauldrond.constants.enums import ERROR_MESSAGES
+from kettled.constants.enums import ERROR_MESSAGES
 from tests.utils import get_future_datetime, init_scheduler_set_event
 import tests.seeds as seeds
 

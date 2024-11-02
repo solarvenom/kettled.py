@@ -1,8 +1,8 @@
 from sys import stderr, stdout
 import re
 from datetime import datetime
-from cauldrond.constants.date_formats import DATE_FORMATS
-from cauldrond.constants.enums import ERROR_MESSAGES, EVENT_PARAMETERS
+from kettled.constants.date_formats import DATE_FORMATS
+from kettled.constants.enums import ERROR_MESSAGES, EVENT_PARAMETERS
 
 class Scheduler:
     def __init__(self):
