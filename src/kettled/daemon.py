@@ -90,6 +90,8 @@ class Daemon:
             else:
                 stderr.write(err)
                 exit(1)
+        finally:
+            stdout.write(MESSAGES.IS_TERMINATED.value)
 
     @staticmethod
     def status():
@@ -118,6 +120,14 @@ class Daemon:
         stdout.write(MESSAGES.IS_STARTED.value)
         self.scheduler = Scheduler()
         while True:
+            current_timestamp = int(datetime.now().timestamp())
+            try:
+                current_timestamp_events = self.scheduler.storage[current_timestamp]
+                for event_name, event_callback in current_timestamp_events.items():
+                    eval(event_callback())
+                    self.scheduler.remove(event_name=event_name)
+            except KeyError:
+                pass
             current_pipe_updated_at = path.getmtime(PIPE_FILE)
             if current_pipe_updated_at > self.pipe_updated_at:
                 self.pipe_updated_at = current_pipe_updated_at

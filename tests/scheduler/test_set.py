@@ -99,3 +99,11 @@ def test_set_event_with_callback_empty_string_fail_case():
         test_instance.set(event_name=seeds.EVENT_NAME, date_time=str(tomorrows_timestamp), callback="")
     except ValueError as error:
         assert str(error) == ERROR_MESSAGES.MISSING_EVENT_CALLBACK.value
+
+def test_set_event_with_existing_name_with_spaces_fail_case():
+    test_instance = Scheduler()
+    test_instance.set(event_name=seeds.EVENT_NAME, date_time=str(tomorrows_timestamp), callback="")
+    try:
+        test_instance.set(event_name="    "+seeds.EVENT_NAME+"     ", date_time=str(tomorrows_timestamp), callback="")
+    except ValueError as error:
+        assert str(error) == ERROR_MESSAGES.EVENT_NAME_NOT_UNIQUE.value

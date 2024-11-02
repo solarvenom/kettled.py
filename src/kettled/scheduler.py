@@ -49,9 +49,12 @@ class Scheduler:
         if callback is None:
             raise ValueError(ERROR_MESSAGES.MISSING_EVENT_CALLBACK.value)
         timestamp = self.get_timestamp(date_time)
+        current_timestamp = int(datetime.now().timestamp())
+        if current_timestamp > timestamp:
+            raise ValueError(ERROR_MESSAGES.TIMESTAMP_OUTDATED.value)
         if timestamp not in self.storage:
             self.storage[timestamp] = {}
-        self.storage[timestamp][event_name] = lambda: callback
+        self.storage[timestamp][event_name] = lambda: self.wrap_callback(callback)
         self.index[event_name] = timestamp
 
     def list(self):
@@ -98,3 +101,7 @@ class Scheduler:
             event_name=event_to_update[EVENT_PARAMETERS.EVENT_NAME.value], 
             date_time=event_to_update[EVENT_PARAMETERS.DATE_TIME.value],
             callback=event_to_update[EVENT_PARAMETERS.CALLBACK.value])
+    
+    @staticmethod
+    def wrap_callback(event_callback):
+        return event_callback

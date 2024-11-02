@@ -1,6 +1,5 @@
 from sys import exit, argv, stderr
 from json import dumps
-from inspect import getsource
 import logging
 from kettled.daemon import Daemon, get_daemon_pid
 from kettled.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS, TERMINAL_PROMPTS
@@ -37,16 +36,9 @@ def main() -> None:
                 get_daemon_pid()
                 command, data = {}, {}
                 command[COMMAND_MESSAGE.COMMAND.value] = COMMANDS.ADD.value
-                # data["date_time"] = "2286-11-20 15:28:45"
-                # data["event_name"] = "test event"
-                # def callback():
-                #     return print("test_cb_value")
-                data[EVENT_PARAMETERS.EVENT_NAME.value] = input(TERMINAL_PROMPTS.ADD_EVENT_NAME.value)
+                data[EVENT_PARAMETERS.EVENT_NAME.value] = input(TERMINAL_PROMPTS.ADD_EVENT_NAME.value).strip()
                 data[EVENT_PARAMETERS.DATE_TIME.value] = input(TERMINAL_PROMPTS.ADD_EVENT_DATE_TIME.value)
-                event_callback = input(TERMINAL_PROMPTS.ADD_EVENT_CALLBACK.value)
-                def callback():
-                    return event_callback
-                data[EVENT_PARAMETERS.CALLBACK.value] = getsource(callback)
+                data[EVENT_PARAMETERS.CALLBACK.value] = input(TERMINAL_PROMPTS.ADD_EVENT_CALLBACK.value)
                 command[COMMAND_MESSAGE.DATA.value] = data
                 command_json = dumps(command)
                 pipe_command(command_json)

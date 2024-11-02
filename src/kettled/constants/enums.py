@@ -35,6 +35,7 @@ class MESSAGES(Enum):
     IS_DOWN = f"{ICONS.KETTLE.value} {DAEMON_NAME} is down.\n"
     IS_NOT_RUNNING = f"{ICONS.KETTLE.value} pidfile {PID_FILE} does not exist. {DAEMON_NAME} not running?\n"
     EVENT_ADDED = f"{ICONS.KETTLE.value} event scheduled.\n"
+    IS_TERMINATED = f"{ICONS.KETTLE.value} {DAEMON_NAME} was terminated.\n"
 
 class EVENT_PARAMETERS(Enum):
     EVENT_NAME = "event_name"
