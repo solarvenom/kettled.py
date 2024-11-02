@@ -1,5 +1,5 @@
 from enum import Enum
-from kettled.constants.env import DAEMON_NAME
+from kettled.constants.env import DAEMON_NAME, PID_FILE
 
 class ICONS(Enum):
     KETTLE = "🫖"
@@ -33,6 +33,7 @@ class MESSAGES(Enum):
     IS_ALREADY_RUNNING = f"{ICONS.KETTLE.value} {DAEMON_NAME} alredy running. check uptime with '{DAEMON_NAME} status'.\n"
     IS_STARTED = f"{ICONS.KETTLE.value} {DAEMON_NAME} started.\n"
     IS_DOWN = f"{ICONS.KETTLE.value} {DAEMON_NAME} is down.\n"
+    IS_NOT_RUNNING = f"{ICONS.KETTLE.value} pidfile {PID_FILE} does not exist. {DAEMON_NAME} not running?\n"
     EVENT_ADDED = f"{ICONS.KETTLE.value} event scheduled.\n"
 
 class EVENT_PARAMETERS(Enum):

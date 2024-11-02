@@ -1,9 +1,10 @@
 from sys import exit, argv, stderr
 from json import dumps
+from inspect import getsource
+import logging
 from kettled.daemon import Daemon, get_daemon_pid
 from kettled.constants.enums import COMMANDS, ERROR_MESSAGES, MESSAGES, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS, TERMINAL_PROMPTS
-import inspect
-import logging
+from kettled.pipes import pipe_command
 
 def main() -> None:
     if len(argv) == 2:
@@ -28,7 +29,7 @@ def main() -> None:
                 command = {}
                 command[COMMAND_MESSAGE.COMMAND.value] = COMMANDS.LIST.value
                 command_json = dumps(command)
-                Daemon.pipe_command(command_json)
+                pipe_command(command_json)
             except IOError:
                 stderr.write(MESSAGES.IS_DOWN.value)
         elif COMMANDS.ADD.value == argv[1]:
@@ -45,10 +46,10 @@ def main() -> None:
                 event_callback = input(TERMINAL_PROMPTS.ADD_EVENT_CALLBACK.value)
                 def callback():
                     return event_callback
-                data[EVENT_PARAMETERS.CALLBACK.value] = inspect.getsource(callback)
+                data[EVENT_PARAMETERS.CALLBACK.value] = getsource(callback)
                 command[COMMAND_MESSAGE.DATA.value] = data
                 command_json = dumps(command)
-                Daemon.pipe_command(command_json)
+                pipe_command(command_json)
             except IOError:
                 stderr.write(MESSAGES.IS_DOWN.value)
         elif COMMANDS.DELETE.value == argv[1]:
@@ -59,7 +60,7 @@ def main() -> None:
                 data[EVENT_PARAMETERS.EVENT_NAME.value] = input(TERMINAL_PROMPTS.DELETE_EVENT_NAME.value)
                 command[COMMAND_MESSAGE.DATA.value] = data
                 command_json = dumps(command)
-                Daemon.pipe_command(command_json)
+                pipe_command(command_json)
             except IOError as e:
                 logging.exception(e)
         elif COMMANDS.UPDATE.value == argv[1]:
@@ -86,7 +87,7 @@ def main() -> None:
                     data[UPDATE_EVENT_PARAMETERS.NEW_CALLBACK.value] = new_callback
                 command[COMMAND_MESSAGE.DATA.value] = data
                 command_json = dumps(command)
-                Daemon.pipe_command(command_json)
+                pipe_command(command_json)
             except ValueError as error:
                 logging.exception(error)
             except IOError:

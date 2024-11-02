@@ -4,11 +4,11 @@ from time import sleep
 from atexit import register
 from datetime import datetime
 from signal import SIGTERM
-from json import loads
 from kettled.constants.env import DAEMON_NAME, PID_FILE, PIPE_FILE
-from kettled.constants.enums import ICONS, COMMANDS
+from kettled.constants.enums import ICONS
 from kettled.scheduler import Scheduler
-from kettled.constants.enums import MESSAGES, ERROR_MESSAGES, UPDATE_EVENT_PARAMETERS, COMMAND_MESSAGE, EVENT_PARAMETERS
+from kettled.constants.enums import MESSAGES
+from kettled.pipes import read_pipe
 
 def get_daemon_pid():
     pf = open(PID_FILE,'r')
@@ -74,7 +74,7 @@ class Daemon:
             pid = None
         
         if not pid:
-            stderr.write(f"{ICONS.KETTLE.value} pidfile {PID_FILE} does not exist. {DAEMON_NAME} not running?\n")
+            stderr.write(MESSAGES.IS_NOT_RUNNING.value)
             return
 
         try:
@@ -110,42 +110,6 @@ class Daemon:
                 stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
         return
     
-    @staticmethod
-    def pipe_command(command_json):
-        with open(PIPE_FILE, 'w') as pipe:
-            pipe.write(command_json + '\n')
-
-    def read_pipe(self):
-        with open(PIPE_FILE, 'r') as pipe:
-            command_json = pipe.read().strip()
-            parsed_command = loads(command_json)
-            if self.scheduler is not None:
-                if parsed_command[COMMAND_MESSAGE.COMMAND.value] == COMMANDS.LIST.value:
-                    self.list()
-                elif parsed_command[COMMAND_MESSAGE.COMMAND.value] == COMMANDS.ADD.value:
-                    try:
-                        self.scheduler.set(
-                            event_name=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.EVENT_NAME.value],
-                            date_time=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.DATE_TIME.value],
-                            callback=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.CALLBACK.value])
-                    except ValueError as error:
-                        stderr.write(str(error))
-                elif parsed_command[COMMAND_MESSAGE.COMMAND.value] == COMMANDS.DELETE.value:
-                    self.scheduler.remove(event_name=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.EVENT_NAME.value])
-                elif parsed_command[COMMAND_MESSAGE.COMMAND.value] == COMMANDS.UPDATE.value:
-                    try:
-                        fields_to_update = parsed_command[COMMAND_MESSAGE.DATA.value].keys()
-                        self.scheduler.update(
-                            event_name=parsed_command[COMMAND_MESSAGE.DATA.value][EVENT_PARAMETERS.EVENT_NAME.value],
-                            new_event_name=parsed_command[COMMAND_MESSAGE.DATA.value][UPDATE_EVENT_PARAMETERS.NEW_EVENT_NAME.value] if UPDATE_EVENT_PARAMETERS.NEW_EVENT_NAME.value in fields_to_update else None,
-                            new_date_time=parsed_command[COMMAND_MESSAGE.DATA.value][UPDATE_EVENT_PARAMETERS.NEW_DATE_TIME.value] if UPDATE_EVENT_PARAMETERS.NEW_DATE_TIME.value in fields_to_update else None,
-                            new_callback=parsed_command[COMMAND_MESSAGE.DATA.value][UPDATE_EVENT_PARAMETERS.NEW_CALLBACK.value] if UPDATE_EVENT_PARAMETERS.NEW_CALLBACK.value in fields_to_update else None)
-                    except ValueError as error:
-                        stderr.write(str(error))
-            else:
-                stderr.write(ERROR_MESSAGES.SCHEDULER_NOT_RUNNING.value)
-            
-
     def list(self):
         if self.scheduler:
             self.scheduler.list()
@@ -157,5 +121,5 @@ class Daemon:
             current_pipe_updated_at = path.getmtime(PIPE_FILE)
             if current_pipe_updated_at > self.pipe_updated_at:
                 self.pipe_updated_at = current_pipe_updated_at
-                self.read_pipe()
+                read_pipe(self)
             sleep(0.5)
