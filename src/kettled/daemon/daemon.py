@@ -4,7 +4,7 @@ from time import sleep
 from atexit import register
 from datetime import datetime
 from signal import SIGTERM
-from kettled.constants.env import DAEMON_NAME, PID_FILE, PIPE_FILE
+from kettled.constants.env import PID_FILE, PIPE_FILE
 from kettled.constants.enums import ICONS
 from kettled.daemon.scheduler import Scheduler
 from kettled.constants.enums import MESSAGES
@@ -17,9 +17,10 @@ def get_daemon_pid():
     return pid
 
 class Daemon:
-    def __init__(self):
+    def __init__(self, is_persistent):
         self.scheduler = None
         self.pipe_updated_at = 0
+        self.is_persistent = is_persistent
 
     def daemonize(self):
         try:
@@ -89,25 +90,6 @@ class Daemon:
                 exit(1)
         finally:
             stdout.write(MESSAGES.IS_TERMINATED.value)
-
-    # @staticmethod
-    # def status():
-    #     try:
-    #         c_time = path.getctime(PID_FILE)
-    #     except IOError:
-    #         c_time = None
-    
-    #     if not c_time:
-    #         stdout.write(MESSAGES.IS_DOWN.value)
-    #     else:
-    #         total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
-    #         if total_seconds < 60:
-    #             stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds} seconds.\n")
-    #         elif total_seconds < 3600:
-    #             stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
-    #         else:
-    #             stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
-    #     return
     
     def list(self):
         if self.scheduler:

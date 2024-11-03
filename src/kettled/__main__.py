@@ -5,7 +5,7 @@ from kettled.handlers.terminal_handler import TerminalHandler
 def main() -> None:
     if len(argv) == 2:
         if COMMANDS.START.value == argv[1]:
-            TerminalHandler()
+            TerminalHandler().init()
         elif COMMANDS.STOP.value == argv[1]:
             TerminalHandler.stop()
         elif COMMANDS.STATUS.value == argv[1]:

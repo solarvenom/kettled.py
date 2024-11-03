@@ -1,7 +1,7 @@
 from kettled.constants.env import VERSION
-from kettled.daemon.daemon import Daemon
+from kettled.handlers.import_handler import ImportHandler as Kettled
 
 __version__ = VERSION
 __author__ = "solarvenom"
 
-__all__ = ["Daemon"]
+__all__ = ["Kettled"]

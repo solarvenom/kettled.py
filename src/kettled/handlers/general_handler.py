@@ -8,12 +8,15 @@ from kettled.constants.enums import COMMANDS, MESSAGES, COMMAND_MESSAGE, ICONS
 from kettled.constants.env import DAEMON_NAME, PID_FILE
 
 class GeneralHandler:
-    def __init__(self):
+    def __init__(self, is_persistent=False):
+        self.is_persistent = is_persistent
+
+    def init(self):
         try:
             get_daemon_pid()
             stderr.write(MESSAGES.IS_ALREADY_RUNNING.value)
         except IOError:
-            Daemon().start()
+            Daemon(self.is_persistent).start()
     
     @staticmethod
     def stop():

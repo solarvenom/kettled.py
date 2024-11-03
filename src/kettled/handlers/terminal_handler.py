@@ -1,6 +1,5 @@
 from sys import stderr
 from json import dumps
-import logging
 from kettled.daemon.daemon import get_daemon_pid
 from kettled.daemon.pipes import pipe_command
 from kettled.constants.enums import (
@@ -10,7 +9,6 @@ from kettled.constants.enums import (
 from kettled.handlers.general_handler import GeneralHandler
 
 class TerminalHandler(GeneralHandler):
-
     @staticmethod
     def add():
         try:
@@ -36,8 +34,8 @@ class TerminalHandler(GeneralHandler):
             command[COMMAND_MESSAGE.DATA.value] = data
             command_json = dumps(command)
             pipe_command(command_json)
-        except IOError as e:
-            logging.exception(e)
+        except IOError as error:
+            stderr.write(str(error))
 
     @staticmethod
     def update():
