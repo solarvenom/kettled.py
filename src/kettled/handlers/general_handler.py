@@ -4,7 +4,7 @@ from json import dumps
 from datetime import datetime
 from kettled.daemon.daemon import Daemon, get_daemon_pid
 from kettled.daemon.pipes import pipe_command
-from kettled.constants.enums import COMMANDS, MESSAGES, COMMAND_MESSAGE, ICONS
+from kettled.constants.enums import COMMANDS, MESSAGES, COMMAND_PIPE, ICONS
 from kettled.constants.env import DAEMON_NAME, PID_FILE
 
 class GeneralHandler:
@@ -49,6 +49,6 @@ class GeneralHandler:
     def list():
         try:
             get_daemon_pid()
-            pipe_command(dumps({COMMAND_MESSAGE.COMMAND.value: COMMANDS.LIST.value}))
+            pipe_command(dumps({COMMAND_PIPE.COMMAND.value: COMMANDS.LIST.value}))
         except IOError:
             stderr.write(MESSAGES.IS_DOWN.value)

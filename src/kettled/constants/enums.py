@@ -47,7 +47,7 @@ class UPDATE_EVENT_PARAMETERS(Enum):
     NEW_DATE_TIME = "new_date_time"
     NEW_CALLBACK = "new_callback"
 
-class COMMAND_MESSAGE(Enum):
+class COMMAND_PIPE(Enum):
     COMMAND = "command"
     DATA = "data"
 
