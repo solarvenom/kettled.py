@@ -7,9 +7,9 @@ from kettled.constants.enums import (
     COMMANDS, ERROR_MESSAGES, MESSAGES, UPDATE_EVENT_PARAMETERS, 
     COMMAND_PIPE, EVENT_PARAMETERS
 )
-from kettled.handlers.general_handler import GeneralHandler
+from kettled.handlers.handler import Handler
 
-class ImportHandler(GeneralHandler):
+class ImportHandler(Handler):
     @staticmethod
     def add(event_name: str, date_time: str | int, callback: str | Callable):
         try:
@@ -29,9 +29,9 @@ class ImportHandler(GeneralHandler):
                 }
             }))
         except ValueError as error:
-            stderr.write(str(error))
+            return stderr.write(str(error))
         except IOError:
-            stderr.write(MESSAGES.IS_DOWN.value)
+            return stderr.write(MESSAGES.IS_DOWN.value)
 
     @staticmethod
     def delete(event_name: str):
@@ -46,9 +46,9 @@ class ImportHandler(GeneralHandler):
                 }
             }))
         except ValueError as error:
-            stderr.write(str(error))
+            return stderr.write(str(error))
         except IOError as error:
-            stderr.write(str(error))
+            return stderr.write(str(error))
 
     @staticmethod
     def update(
@@ -75,6 +75,6 @@ class ImportHandler(GeneralHandler):
             command[COMMAND_PIPE.DATA.value] = data
             pipe_command(dumps(command))
         except ValueError as error:
-            stderr.write(str(error))
+            return stderr.write(str(error))
         except IOError:
-            stderr.write(MESSAGES.IS_DOWN.value)
+            return stderr.write(MESSAGES.IS_DOWN.value)

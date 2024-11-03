@@ -3,7 +3,7 @@ name = "kettled"
 description = "A simple, ligthweight and secure python scheduler for UNIX systems that does not depend on any third-party packages."
 readme = "README.md"
 requires-python = ">=3.11"
-authors = [{ name = "solarvenom", email = "contact@solarvenom.com"  }]
+authors = [{ name = "solarvenom", email = "contact@solarvenom.com" }]
 license = { text = "MIT" }
 dynamic = ["version"]
 
@@ -11,8 +11,8 @@ dynamic = ["version"]
 kettled = "kettled.__main__:main"
 
 [project.urls]
-"Homepage" = "https://github.com/solarvenom/kettled"
-"Issue Tracker" = "https://github.com/solarvenom/kettled/issues"
+"Homepage" = "https://github.com/solarvenom/kettled.py"
+"Issue Tracker" = "https://github.com/solarvenom/kettled.py/issues"
 
 [tool.pyright]
 pythonPlatform = "All"

@@ -4,6 +4,8 @@ from kettled.constants.env import DAEMON_NAME, PID_FILE
 class ICONS(Enum):
     KETTLE = "🫖"
     SKULL = "☠️"
+    FIX = "🛠️"
+    FEATURE = "✨"
 
 class COMMANDS(Enum):
     START = "start"
