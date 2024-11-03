@@ -1,4 +1,4 @@
-from kettled.scheduler import Scheduler
+from kettled.daemon.scheduler import Scheduler
 
 def test_init_success_case():
     test_instance = Scheduler()

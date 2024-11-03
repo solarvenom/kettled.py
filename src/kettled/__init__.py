@@ -1,5 +1,5 @@
 from kettled.constants.env import VERSION
-from kettled.daemon import Daemon
+from kettled.daemon.daemon import Daemon
 
 __version__ = VERSION
 __author__ = "solarvenom"

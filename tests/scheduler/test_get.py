@@ -1,5 +1,5 @@
 from datetime import datetime
-from kettled.scheduler import Scheduler
+from kettled.daemon.scheduler import Scheduler
 from kettled.constants.enums import EVENT_PARAMETERS
 from tests.utils import get_future_datetime
 import tests.seeds as seeds

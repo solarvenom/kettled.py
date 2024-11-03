@@ -6,9 +6,9 @@ from datetime import datetime
 from signal import SIGTERM
 from kettled.constants.env import DAEMON_NAME, PID_FILE, PIPE_FILE
 from kettled.constants.enums import ICONS
-from kettled.scheduler import Scheduler
+from kettled.daemon.scheduler import Scheduler
 from kettled.constants.enums import MESSAGES
-from kettled.pipes import read_pipe
+from kettled.daemon.pipes import read_pipe
 
 def get_daemon_pid():
     pf = open(PID_FILE,'r')

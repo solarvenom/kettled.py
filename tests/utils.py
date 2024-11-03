@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from kettled.scheduler import Scheduler
+from kettled.daemon.scheduler import Scheduler
 import tests.seeds as seeds
 
 def init_scheduler_set_event(event_datetime):
