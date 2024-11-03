@@ -91,6 +91,6 @@ def main() -> None:
     else:
         stderr.write(MESSAGES.USAGE.value)
         exit(2)
-
+        
 if __name__ == "__main__":
     main()
