@@ -11,7 +11,9 @@ class Handler:
             get_daemon_pid()
             stderr.write(MESSAGES.IS_ALREADY_RUNNING.value)
         except IOError:
-            Daemon(self.is_persistent).start()
+            Daemon(
+                is_persistent=self.is_persistent
+            ).start()
     
     @staticmethod
     def stop():

@@ -17,10 +17,13 @@ def get_daemon_pid():
     return pid
 
 class Daemon:
-    def __init__(self, is_persistent):
+    def __init__(
+            self, 
+            is_persistent = False
+        ):
+        self.is_persistent = is_persistent
         self.scheduler = None
         self.pipe_updated_at = 0
-        self.is_persistent = is_persistent
 
     def daemonize(self):
         try:
