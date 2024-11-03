@@ -29,7 +29,6 @@ class Daemon:
         except OSError as e:
             stderr.write(f"{ICONS.SKULL.value} Fork #1 failed: {e.errno} {e.strerror}\n")
             exit(1)
-       
         chdir("/")
         setsid()
         umask(0)
@@ -72,11 +71,9 @@ class Daemon:
             pid = get_daemon_pid()
         except IOError:
             pid = None
-        
         if not pid:
             stderr.write(MESSAGES.IS_NOT_RUNNING.value)
             return
-
         try:
             while 1:
                 kill(pid, SIGTERM)
@@ -93,24 +90,24 @@ class Daemon:
         finally:
             stdout.write(MESSAGES.IS_TERMINATED.value)
 
-    @staticmethod
-    def status():
-        try:
-            c_time = path.getctime(PID_FILE)
-        except IOError:
-            c_time = None
+    # @staticmethod
+    # def status():
+    #     try:
+    #         c_time = path.getctime(PID_FILE)
+    #     except IOError:
+    #         c_time = None
     
-        if not c_time:
-            stdout.write(MESSAGES.IS_DOWN.value)
-        else:
-            total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
-            if total_seconds < 60:
-                stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds} seconds.\n")
-            elif total_seconds < 3600:
-                stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
-            else:
-                stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
-        return
+    #     if not c_time:
+    #         stdout.write(MESSAGES.IS_DOWN.value)
+    #     else:
+    #         total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
+    #         if total_seconds < 60:
+    #             stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds} seconds.\n")
+    #         elif total_seconds < 3600:
+    #             stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds.\n")
+    #         else:
+    #             stdout.write(f"{ICONS.KETTLE.value} {DAEMON_NAME} has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds.\n")
+    #     return
     
     def list(self):
         if self.scheduler:
