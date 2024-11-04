@@ -4,17 +4,36 @@ description = "A simple, ligthweight and secure python scheduler for UNIX system
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "solarvenom", email = "contact@solarvenom.com" }]
+maintainers = [{ name = "solarvenom", email = "contact@solarvenom.com" }]
 license = { text = "MIT" }
 dynamic = ["version"]
 
 [project.scripts]
 kettled = "kettled.__main__:main"
 
+keywords = [
+    "scheduler",
+    "schedule",
+    "daemon",
+    "datetime",
+    "date",
+    "time",
+    "timedelta",
+]
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Unix",
+]
+
 [project.urls]
 "Homepage" = "https://github.com/solarvenom/kettled.py"
 "Issue Tracker" = "https://github.com/solarvenom/kettled.py/issues"
+"Changelog" = "https://github.com/solarvenom/kettled.py/CHANGELOG.md"
 
 [tool.pyright]
 pythonPlatform = "All"
 
-[tool.setuptools_scm]
+[tool.setuptools.dynamic]
+version = { attr = "kettled.__version__" }
+readme = { file = "README.md", content-type = "text/markdown" }

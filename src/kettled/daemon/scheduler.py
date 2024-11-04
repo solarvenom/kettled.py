@@ -1,4 +1,5 @@
 from sys import stderr, stdout
+from typing import Callable
 import re
 from datetime import datetime
 from kettled.constants.date_formats import DATE_FORMATS
@@ -39,7 +40,7 @@ class Scheduler:
             EVENT_PARAMETERS.DATE_TIME.value: timestamp, 
             EVENT_PARAMETERS.CALLBACK.value: callback }
 
-    def set(self, event_name, date_time, callback):        
+    def set(self, event_name, date_time, callback) -> None:        
         if event_name is None or event_name == "":
             raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
         if event_name in self.index.keys():
@@ -57,7 +58,7 @@ class Scheduler:
         self.storage[timestamp][event_name] = lambda: self.wrap_callback(callback)
         self.index[event_name] = timestamp
 
-    def list(self):
+    def list(self) -> None:
         event_list: list[list] = []
         event_index = 1
         if len(self.index) == 0:
@@ -74,7 +75,7 @@ class Scheduler:
             list_str += "|_______|______________________|______________________|\n"
             stdout.write(list_str)
 
-    def remove(self, event_name):
+    def remove(self, event_name) -> None:
         if event_name not in self.index.keys():
             raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
         event_timestamp = self.index[event_name]
@@ -84,7 +85,7 @@ class Scheduler:
             self.storage.pop(event_timestamp)
         self.index.pop(event_name)
 
-    def update(self, event_name, new_event_name=None, new_date_time=None, new_callback=None):
+    def update(self, event_name, new_event_name=None, new_date_time=None, new_callback=None) -> None:
         if event_name is None or event_name == "":
             raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
         if event_name not in self.index.keys():
@@ -103,5 +104,5 @@ class Scheduler:
             callback=event_to_update[EVENT_PARAMETERS.CALLBACK.value])
     
     @staticmethod
-    def wrap_callback(event_callback):
+    def wrap_callback(event_callback) -> Callable:
         return event_callback
