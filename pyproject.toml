@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "kettled"
 description = "A simple, ligthweight and secure python scheduler for UNIX systems that does not depend on any third-party packages."
