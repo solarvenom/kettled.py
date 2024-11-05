@@ -8,9 +8,6 @@ maintainers = [{ name = "solarvenom", email = "contact@solarvenom.com" }]
 license = { text = "MIT" }
 dynamic = ["version"]
 
-[project.scripts]
-kettled = "kettled.__main__:main"
-
 keywords = [
     "scheduler",
     "schedule",
@@ -18,8 +15,9 @@ keywords = [
     "datetime",
     "date",
     "time",
-    "timedelta",
+    "timedelta"
 ]
+
 classifiers=[
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -37,3 +35,6 @@ pythonPlatform = "All"
 [tool.setuptools.dynamic]
 version = { attr = "kettled.__version__" }
 readme = { file = "README.md", content-type = "text/markdown" }
+
+[project.scripts]
+kettled = "kettled.__main__:main"
