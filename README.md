@@ -6,12 +6,12 @@
 Kettled is a fast, efficient and secure daemon-based event scheduler for UNIX-systems that spawns an independent process which keeps track of your scheduled events with a nice CLI UI.
 
 ## Features
-<div style="display: flex">
-    <div style="flex: 1;">
+<div style="display: block">
+    <div style="float: left">
         - ✨ Built with python built-in modules only. No third-party modules involved.
         - ✨ An easy-to-use CLI UI to manage and monitor your scheduler daemon.
     </div>
-    <div style="flex: 1; margin-left: 15px;">
+    <div style="float: right">
         <img src="https://github.com/solarvenom/kettled.py/blob/main/docs/kettle.gif">
     </div>
 </div>
