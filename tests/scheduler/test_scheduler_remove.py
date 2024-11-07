@@ -9,7 +9,7 @@ tomorrows_timestamp = int(datetime.timestamp(tomorrows_datetime))
 def test_remove_event_success_case():
     test_instance = init_scheduler_set_event(tomorrows_datetime)
     test_instance.remove(seeds.EVENT_NAME)
-    assert len(test_instance.storage) == 0
+    assert len(test_instance.in_memory_storage) == 0
     assert len(test_instance.index) == 0
 
 def test_remove_nonexistent_event_fail_case():

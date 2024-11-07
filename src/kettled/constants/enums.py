@@ -29,6 +29,7 @@ class ERROR_MESSAGES(Enum):
     NO_EVENTS_SCHEDULED = f"{ICONS.SKULL.value}  no events scheduled at the moment.\n"
     SCHEDULER_NOT_RUNNING = f"{ICONS.SKULL.value}  scheduler not running...\n"
     TIMESTAMP_OUTDATED = f"{ICONS.SKULL.value}  date_time must specify a future date.\n"
+    DB_CONNECTION_FAILED = f"{ICONS.SKULL.value}  DB connection failed.\n"
 
 class MESSAGES(Enum):
     USAGE = f"{ICONS.KETTLE.value} available commands: {COMMANDS.START.value} | {COMMANDS.STOP.value} | {COMMANDS.RESTART.value} | {COMMANDS.STATUS.value}\n"
@@ -48,6 +49,11 @@ class UPDATE_EVENT_PARAMETERS(Enum):
     NEW_EVENT_NAME = "new_event_name"
     NEW_DATE_TIME = "new_date_time"
     NEW_CALLBACK = "new_callback"
+
+class REPOSITORY_EVENT_PARAMETERS(Enum):
+    EVENT_NAME = "event_name"
+    TIMESTAMP = "timestamp"
+    CALLBACK = "callback"
 
 class COMMAND_PIPE(Enum):
     COMMAND = "command"

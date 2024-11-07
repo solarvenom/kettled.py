@@ -3,17 +3,15 @@ from kettled.daemon.daemon import Daemon, get_daemon_pid
 from kettled.constants.enums import MESSAGES
 
 class Handler:
-    def __init__(self, is_persistent=False):
-        self.is_persistent = is_persistent
+    def __init__(self, persistent_session=False):
+        self.persistent_session = persistent_session
 
     def init(self):
         try:
             get_daemon_pid()
             stderr.write(MESSAGES.IS_ALREADY_RUNNING.value)
         except IOError:
-            Daemon(
-                is_persistent=self.is_persistent
-            ).start()
+            Daemon(persistent_session=self.persistent_session).start()
     
     @staticmethod
     def stop():

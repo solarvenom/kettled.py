@@ -11,13 +11,13 @@ tomorrows_timestamp = int(datetime.timestamp(tomorrows_datetime))
 def test_set_event_success_case():
     test_instance = Scheduler()
     test_instance.set(event_name=seeds.EVENT_NAME, date_time=str(tomorrows_datetime), callback=seeds.callback)
-    assert test_instance.storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
+    assert test_instance.in_memory_storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
     assert test_instance.index[seeds.EVENT_NAME] == tomorrows_timestamp
 
 def test_set_event_with_duplicate_name_fail_case():
     test_instance = Scheduler()
     test_instance.set(event_name=seeds.EVENT_NAME, date_time=str(tomorrows_datetime), callback=seeds.callback)
-    assert test_instance.storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
+    assert test_instance.in_memory_storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
     assert test_instance.index[seeds.EVENT_NAME] == tomorrows_timestamp
     try:
         test_instance.set(event_name=seeds.EVENT_NAME, date_time=str(tomorrows_datetime), callback=seeds.callback)
@@ -55,13 +55,13 @@ def test_set_event_with_datetime_empty_string_fail_case():
 def test_set_event_with_datetime_timestamp_integer_success_case():
     test_instance = Scheduler()
     test_instance.set(event_name=seeds.EVENT_NAME, date_time=tomorrows_timestamp, callback=seeds.callback)
-    assert test_instance.storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
+    assert test_instance.in_memory_storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
     assert test_instance.index[seeds.EVENT_NAME] == tomorrows_timestamp
 
 def test_set_event_with_datetime_timestamp_string_success_case():
     test_instance = Scheduler()
     test_instance.set(event_name=seeds.EVENT_NAME, date_time=str(tomorrows_timestamp), callback=seeds.callback)
-    assert test_instance.storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
+    assert test_instance.in_memory_storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
     assert test_instance.index[seeds.EVENT_NAME] == tomorrows_timestamp
 
 def test_set_event_with_unsupported_datetime_formate_fail_case():

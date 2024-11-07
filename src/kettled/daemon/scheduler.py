@@ -3,12 +3,23 @@ from typing import Callable
 import re
 from datetime import datetime
 from kettled.constants.date_formats import DATE_FORMATS
-from kettled.constants.enums import ERROR_MESSAGES, EVENT_PARAMETERS
+from kettled.constants.enums import ERROR_MESSAGES, EVENT_PARAMETERS, REPOSITORY_EVENT_PARAMETERS
+from kettled.database.event_repository import EventRepository
 
 class Scheduler:
-    def __init__(self):
-        self.storage: dict[int, dict] = {}
+    def __init__(self, persistent_session=False):
+        self.in_memory_storage: dict[int, dict] = {}
         self.index: dict[str, int] = {}
+        self.persistent_session: bool = persistent_session
+        self.event_repository: EventRepository
+        if self.persistent_session:
+            self.event_repository = EventRepository()
+            scheduled_events = self.event_repository.get_all_events()
+            for event in scheduled_events:
+                self.set(
+                    event_name=event[REPOSITORY_EVENT_PARAMETERS.EVENT_NAME.value],
+                    date_time=event[REPOSITORY_EVENT_PARAMETERS.TIMESTAMP.value],
+                    callback=event[REPOSITORY_EVENT_PARAMETERS.CALLBACK.value])
     
     @staticmethod
     def get_timestamp(date) -> int:
@@ -34,13 +45,13 @@ class Scheduler:
         timestamp = self.index[event_name]
         if timestamp is None:
             raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
-        callback = self.storage[timestamp][event_name]
+        callback = self.in_memory_storage[timestamp][event_name]
         return { 
             EVENT_PARAMETERS.EVENT_NAME.value: event_name, 
             EVENT_PARAMETERS.DATE_TIME.value: timestamp, 
             EVENT_PARAMETERS.CALLBACK.value: callback }
 
-    def set(self, event_name, date_time, callback) -> None:        
+    def set(self, event_name, date_time, callback) -> None:
         if event_name is None or event_name == "":
             raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
         if event_name in self.index.keys():
@@ -53,10 +64,12 @@ class Scheduler:
         current_timestamp = int(datetime.now().timestamp())
         if current_timestamp > timestamp:
             raise ValueError(ERROR_MESSAGES.TIMESTAMP_OUTDATED.value)
-        if timestamp not in self.storage:
-            self.storage[timestamp] = {}
-        self.storage[timestamp][event_name] = lambda: self.wrap_callback(callback)
+        if timestamp not in self.in_memory_storage:
+            self.in_memory_storage[timestamp] = {}
+        self.in_memory_storage[timestamp][event_name] = lambda: self.wrap_callback(callback)
         self.index[event_name] = timestamp
+        if self.persistent_session:
+            self.event_repository.insert_event(event_name=event_name, timestamp=timestamp, callback=f"{self.wrap_callback(callback)}")
 
     def list(self) -> None:
         event_list: list[list] = []
@@ -79,11 +92,13 @@ class Scheduler:
         if event_name not in self.index.keys():
             raise ValueError(ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value)
         event_timestamp = self.index[event_name]
-        if len(self.storage[event_timestamp]) > 1:
-            self.storage[event_timestamp].pop(event_name)
+        if len(self.in_memory_storage[event_timestamp]) > 1:
+            self.in_memory_storage[event_timestamp].pop(event_name)
         else:
-            self.storage.pop(event_timestamp)
+            self.in_memory_storage.pop(event_timestamp)
         self.index.pop(event_name)
+        if self.persistent_session:
+            self.event_repository.delete_event_by_name(event_name=event_name)
 
     def update(self, event_name, new_event_name=None, new_date_time=None, new_callback=None) -> None:
         if event_name is None or event_name == "":
@@ -102,6 +117,12 @@ class Scheduler:
             event_name=event_to_update[EVENT_PARAMETERS.EVENT_NAME.value], 
             date_time=event_to_update[EVENT_PARAMETERS.DATE_TIME.value],
             callback=event_to_update[EVENT_PARAMETERS.CALLBACK.value])
+        if self.persistent_session:
+            self.event_repository.update_event_by_name(
+                event_name=event_name,
+                new_event_name=event_to_update[EVENT_PARAMETERS.EVENT_NAME.value],
+                new_timestamp=event_to_update[EVENT_PARAMETERS.DATE_TIME.value],
+                new_callback=f"{event_to_update[EVENT_PARAMETERS.CALLBACK.value]}")
     
     @staticmethod
     def wrap_callback(event_callback) -> Callable:
