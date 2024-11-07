@@ -17,11 +17,8 @@ def get_daemon_pid():
     return pid
 
 class Daemon:
-    def __init__(
-            self, 
-            is_persistent = False
-        ):
-        self.is_persistent = is_persistent
+    def __init__(self, persistent_session = False):
+        self.persistent_session = persistent_session
         self.scheduler = None
         self.pipe_updated_at = 0
 
@@ -100,11 +97,11 @@ class Daemon:
 
     def run(self):
         stdout.write(MESSAGES.IS_STARTED.value)
-        self.scheduler = Scheduler()
+        self.scheduler = Scheduler(persistent_session=self.persistent_session)
         while True:
             current_timestamp = int(datetime.now().timestamp())
             try:
-                current_timestamp_events = self.scheduler.storage[current_timestamp]
+                current_timestamp_events = self.scheduler.in_memory_storage[current_timestamp]
                 for event_name, event_callback in current_timestamp_events.items():
                     eval(event_callback())
                     self.scheduler.remove(event_name=event_name)
