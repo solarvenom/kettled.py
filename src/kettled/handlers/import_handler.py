@@ -1,6 +1,6 @@
 from sys import stderr
 from json import dumps
-from typing import Callable
+from typing import Callable, Union
 from kettled.daemon.daemon import get_daemon_pid
 from kettled.daemon.pipes import pipe_command
 from kettled.constants.enums import (
@@ -11,7 +11,7 @@ from kettled.handlers.handler import Handler
 
 class ImportHandler(Handler):
     @staticmethod
-    def add(event_name: str, date_time: str | int, callback: str | Callable):
+    def add(event_name: str, date_time: Union[str, int], callback: Union[str, Callable]):
         try:
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES.MISSING_EVENT_NAME.value)
@@ -52,10 +52,10 @@ class ImportHandler(Handler):
 
     @staticmethod
     def update(
-            event_name: str | None, 
-            new_event_name: str | None,
-            new_date_time: str | int | None,
-            new_callback: Callable | None
+            event_name: Union[str, None], 
+            new_event_name: Union[str, None],
+            new_date_time: Union[str, int, None],
+            new_callback: Union[Callable, None]
         ):
         try:
             get_daemon_pid()
