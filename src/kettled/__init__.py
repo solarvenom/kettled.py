@@ -1,4 +1,3 @@
-from kettled.constants.env import VERSION
 from kettled.handlers.import_handler import ImportHandler as Kettled
 
 __version__ = "1.0.0"
