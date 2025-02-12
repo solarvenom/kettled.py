@@ -11,7 +11,7 @@ def read_pipe(daemon):
         with open(PIPE_FILE, 'r') as pipe:
             command_json = pipe.read().strip()
             parsed_command = loads(command_json)
-            if daemon.scheduler is not None:
+            if daemon.scheduler != None:
                 if parsed_command[COMMAND_PIPE.COMMAND.value] == COMMANDS.LIST.value:
                     daemon.list()
                 elif parsed_command[COMMAND_PIPE.COMMAND.value] == COMMANDS.ADD.value:
