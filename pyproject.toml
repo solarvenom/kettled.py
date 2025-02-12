@@ -11,10 +11,6 @@ authors = [{ name = "solarvenom", email = "contact@solarvenom.com" }]
 maintainers = [{ name = "solarvenom", email = "contact@solarvenom.com" }]
 license = { text = "MIT" }
 dynamic = ["version"]
-dependencies = [
-    "setuptools>=73.0.0",
-]
-
 
 keywords = [
     "scheduler",
