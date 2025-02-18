@@ -1,5 +1,5 @@
 from datetime import datetime
-from kettled.constants.enums import ERROR_MESSAGES
+from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
 from tests.utils import get_future_datetime, init_scheduler_set_event
 import tests.seeds as seeds
 
@@ -33,7 +33,7 @@ def test_update_nonexistend_event_fail_case():
     try:
         test_instance.update(event_name="somthing else")
     except ValueError as error:
-        assert str(error) == ERROR_MESSAGES.EVENT_NAME_NOT_FOUND.value
+        assert str(error) == ERROR_MESSAGES_ENUM.EVENT_NAME_NOT_FOUND.value
 
 def test_update_event_with_nonunique_new_name_fail_case():
     test_instance = init_scheduler_set_event(tomorrows_datetime)
@@ -46,7 +46,7 @@ def test_update_event_with_nonunique_new_name_fail_case():
             event_name=seeds.EVENT_NAME,
             new_event_name=seeds.UPDATED_EVENT_NAME)
     except ValueError as error:
-        assert str(error) == ERROR_MESSAGES.EVENT_NAME_NOT_UNIQUE.value
+        assert str(error) == ERROR_MESSAGES_ENUM.EVENT_NAME_NOT_UNIQUE.value
 
 def test_update_event_with_name_empty_string_fail_case():
     test_instance = init_scheduler_set_event(tomorrows_datetime)
@@ -57,7 +57,7 @@ def test_update_event_with_name_empty_string_fail_case():
             new_date_time=str(after_tomorrows_datetime),
             new_callback=seeds.updated_callback)
     except ValueError as error:
-        assert str(error) == ERROR_MESSAGES.MISSING_EVENT_NAME.value
+        assert str(error) == ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value
 
 def test_update_event_with_name_none_fail_case():
     test_instance = init_scheduler_set_event(tomorrows_datetime)
@@ -68,7 +68,7 @@ def test_update_event_with_name_none_fail_case():
             new_date_time=str(after_tomorrows_datetime),
             new_callback=seeds.updated_callback)
     except ValueError as error:
-        assert str(error) == ERROR_MESSAGES.MISSING_EVENT_NAME.value
+        assert str(error) == ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value
 
 def test_update_event_datetime_success_case():
     test_instance = init_scheduler_set_event(tomorrows_datetime)

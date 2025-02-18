@@ -1,6 +1,6 @@
 from datetime import datetime
 from kettled.daemon.scheduler import Scheduler
-from kettled.constants.enums import EVENT_PARAMETERS
+from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
 from tests.utils import get_future_datetime
 import tests.seeds as seeds
 
@@ -13,9 +13,9 @@ def test_get_success_case():
     assert test_instance.in_memory_storage[tomorrows_timestamp][seeds.EVENT_NAME]()() == seeds.EVENT_CALLBACK_VALUE
     assert test_instance.index[seeds.EVENT_NAME] == tomorrows_timestamp
     added_event = test_instance.get(seeds.EVENT_NAME)
-    assert added_event[EVENT_PARAMETERS.EVENT_NAME.value] == seeds.EVENT_NAME
-    assert added_event[EVENT_PARAMETERS.DATE_TIME.value] == tomorrows_timestamp
-    assert added_event[EVENT_PARAMETERS.CALLBACK.value]()() == seeds.EVENT_CALLBACK_VALUE
+    assert added_event[EVENT_PARAMETERS_ENUM.EVENT_NAME.value] == seeds.EVENT_NAME
+    assert added_event[EVENT_PARAMETERS_ENUM.DATE_TIME.value] == tomorrows_timestamp
+    assert added_event[EVENT_PARAMETERS_ENUM.CALLBACK.value]()() == seeds.EVENT_CALLBACK_VALUE
 
 def test_get_fail_case():
     test_instance = Scheduler()
