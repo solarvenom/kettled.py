@@ -15,11 +15,11 @@ class ImportHandler(Handler):
     @staticmethod
     def add(event_name: str, date_time: Union[str, int], callback: Union[str, Callable]):
         try:
-            if event_name == "" or event_name is None:
+            if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
-            if date_time == "" or date_time is None:
+            if date_time == "" or date_time == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value)
-            if callback == "" or callback is None:
+            if callback == "" or callback == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_CALLBACK.value)
             get_daemon_pid()
             pipe_command(dumps({
@@ -38,7 +38,7 @@ class ImportHandler(Handler):
     @staticmethod
     def delete(event_name: str):
         try:
-            if event_name == "" or event_name is None:
+            if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
             get_daemon_pid()
             pipe_command(dumps({
@@ -63,16 +63,16 @@ class ImportHandler(Handler):
             get_daemon_pid()
             command, data = {}, {}
             command[PIPE_COMMANDS_ENUM.COMMAND.value] = COMMANDS_ENUM.UPDATE.value
-            if event_name == "" or event_name is None:
+            if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
             data[EVENT_PARAMETERS_ENUM.EVENT_NAME.value] = event_name
-            if (new_event_name == "" or new_event_name is None) and (new_date_time == "" or new_date_time is None) and (new_callback == "" or new_callback is None):
+            if (new_event_name == "" or new_event_name == None) and (new_date_time == "" or new_date_time == None) and (new_callback == "" or new_callback == None):
                 raise ValueError(ERROR_MESSAGES_ENUM.INSUFFICIENT_UPDATE_ARGS.value)
-            if new_event_name != "" and new_event_name is not None:
+            if new_event_name != "" and new_event_name != None:
                 data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_EVENT_NAME.value] = new_event_name
-            if new_date_time != "" and new_date_time is not None:
+            if new_date_time != "" and new_date_time != None:
                 data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_DATE_TIME.value] = new_date_time
-            if new_callback != "" and new_callback is not None:
+            if new_callback != "" and new_callback != None:
                 data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_CALLBACK.value] = new_callback
             command[PIPE_COMMANDS_ENUM.DATA.value] = data
             pipe_command(dumps(command))
