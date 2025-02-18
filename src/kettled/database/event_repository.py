@@ -33,13 +33,13 @@ class EventRepository():
         updates = []
         params = []
         query = "UPDATE events SET"
-        if new_event_name is not None: 
+        if new_event_name != None: 
             updates.append("event_name = ?")
             params.append(event_name)
-        if new_timestamp is not None: 
+        if new_timestamp != None: 
             updates.append("timestamp = ?")
             params.append(new_timestamp)
-        if new_callback is not None:
+        if new_callback != None:
             updates.append("callback = ?")
             params.append(new_callback)
         query += " " + ", ".join(updates)

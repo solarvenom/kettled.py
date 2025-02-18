@@ -1,6 +1,6 @@
 from sys import stderr
 from kettled.daemon.daemon import Daemon, get_daemon_pid
-from kettled.constants.enums import MESSAGES
+from kettled.constants.enums.messages_enum import MESSAGES_ENUM
 
 class Handler:
     def __init__(self, persistent_session=False):
@@ -9,7 +9,7 @@ class Handler:
     def init(self):
         try:
             get_daemon_pid()
-            stderr.write(MESSAGES.IS_ALREADY_RUNNING.value)
+            stderr.write(MESSAGES_ENUM.IS_ALREADY_RUNNING.value)
         except IOError:
             Daemon(persistent_session=self.persistent_session).start()
     
@@ -19,4 +19,4 @@ class Handler:
             get_daemon_pid()
             Daemon.stop()
         except IOError:
-            stderr.write(MESSAGES.IS_DOWN.value)
+            stderr.write(MESSAGES_ENUM.IS_DOWN.value)
