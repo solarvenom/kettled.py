@@ -1,7 +1,8 @@
-from enum import Enum
+from .enums_superclass import GenericEnum
 
-class RECURRENCY_OPTIONS_ENUM(Enum):
+class RECURRENCY_OPTIONS_ENUM(GenericEnum):
     NOT_RECURRING = "not_recurring"
+    HOURLY = "hourly"
     DAILY = "daily"
     EVERY_MONDAY = "every_monday"
     EVERY_TUESDAY = "every_tuesday"
@@ -49,4 +50,10 @@ class RECURRENCY_OPTIONS_ENUM(Enum):
     TWENTY_NINTH_DAY_OF_THE_MONTH = "twenty_ninth_day_of_the_month"
     THIRTIETH_DAY_OF_THE_MONTH = "thirtieth_day_of_the_month"
     THIRTY_FIRST_DAY_OF_THE_MONTH = "thirty_first_day_of_the_month"
-    
+    LAST_DAY_OF_THE_MONTH = "last_day_of_the_month"
+    SECOND_TO_LAST_DAY_OF_THE_MONTH = "second_to_last_day_of_the_month"
+    THIRD_TO_LAST_DAY_OF_THE_MONTH = "third_to_last_day_of_the_month"
+    FORTH_TO_LAST_DAY_OF_THE_MONTH = "forth_to_last_day_of_the_month"
+    FIFTH_TO_LAST_DAY_OF_THE_MONTH = "fifth_to_last_day_of_the_month"
+    SIXTH_TO_LAST_DAY_OF_THE_MONTH = "sixth_to_last_day_of_the_month"
+    SEVENTH_TO_LAST_DAY_OF_THE_MONTH = "seventh_to_last_day_of_the_month"

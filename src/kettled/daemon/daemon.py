@@ -7,6 +7,9 @@ from signal import SIGTERM
 from kettled.constants.env import PID_FILE, PIPE_FILE
 from kettled.constants.enums.icons_enum import ICONS_ENUM
 from kettled.constants.enums.messages_enum import MESSAGES_ENUM
+from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
+from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
+from kettled.utils.next_recurrency_calculator import get_next_datetime
 from kettled.daemon.scheduler import Scheduler
 from kettled.daemon.pipes import read_pipe
 
@@ -102,9 +105,20 @@ class Daemon:
             current_timestamp = int(datetime.now().timestamp())
             try:
                 current_timestamp_events = self.scheduler.in_memory_storage[current_timestamp]
-                for event_name, event_callback in current_timestamp_events.items():
-                    eval(event_callback())
+                for event_name, event_details in current_timestamp_events.items():
+                    eval(event_details[EVENT_PARAMETERS_ENUM.CALLBACK.value]())
+
                     self.scheduler.remove(event_name=event_name)
+
+                    if event_details[EVENT_PARAMETERS_ENUM.RECURRENCY.value] != RECURRENCY_OPTIONS_ENUM.NOT_RECURRING.value:
+                        next_date_time = get_next_datetime(event_details[EVENT_PARAMETERS_ENUM.DATE_TIME.value], event_details[EVENT_PARAMETERS_ENUM.RECURRENCY.value])
+                        self.scheduler.set(
+                            event_name = event_name,
+                            date_time = next_date_time,
+                            recurrency = event_details[EVENT_PARAMETERS_ENUM.RECURRENCY.value],
+                            fallback_directive = event_details[EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value],
+                            callback = event_details[EVENT_PARAMETERS_ENUM.CALLBACK.value]
+                        )
             except KeyError:
                 pass
             current_pipe_updated_at = path.getmtime(PIPE_FILE)

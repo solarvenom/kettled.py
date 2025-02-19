@@ -13,6 +13,8 @@ from kettled.constants.enums.pipe_commands_enum import PIPE_COMMANDS_ENUM
 from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
 from kettled.constants.enum.terminal_propmpts_enum import TERMINAL_PROPMPTS_ENUM
 from kettled.constants.enum.icons_enum import ICONS_ENUM
+from kettled.constants.enum.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
+from kettled.constants.enum.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
 from kettled.handlers.handler import Handler
 
 class TerminalHandler(Handler):
@@ -30,6 +32,14 @@ class TerminalHandler(Handler):
             if date_time == "" or date_time == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value)
             data[EVENT_PARAMETERS_ENUM.DATE_TIME.value] = date_time
+            recurrency = input(TERMINAL_PROPMPTS_ENUM.ADD_EVENT_RECURRENCY.value).strip()
+            if recurrency == "" or recurrency == None:
+                recurrency = RECURRENCY_OPTIONS_ENUM.NOT_RECURRING
+            data[EVENT_PARAMETERS_ENUM.RECURRENCY.value] = recurrency
+            fallback_directive = input(TERMINAL_PROPMPTS_ENUM.ADD_EVENT_FALLBACK_DIRECTIVE.value).strip()
+            if fallback_directive == "" or fallback_directive == None:
+                fallback_directive = FALLBACK_DIRECTIVES_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE
+            data[EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value] = fallback_directive
             callback = input(TERMINAL_PROPMPTS_ENUM.ADD_EVENT_CALLBACK.value).strip()
             if callback == "" or callback == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_CALLBACK.value)

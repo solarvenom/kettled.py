@@ -23,6 +23,8 @@ def read_pipe(daemon):
                         daemon.scheduler.set(
                             event_name=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
                             date_time=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.DATE_TIME.value],
+                            recurrency=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.RECURRENCY.value],
+                            fallback_directive=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value],
                             callback=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.CALLBACK.value])
                     except ValueError as error:
                         stderr.write(str(error))
@@ -35,6 +37,8 @@ def read_pipe(daemon):
                             event_name=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
                             new_event_name=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][UPDATE_EVENT_PARAMETERS_ENUM.NEW_EVENT_NAME.value] if UPDATE_EVENT_PARAMETERS_ENUM.NEW_EVENT_NAME.value in fields_to_update else None,
                             new_date_time=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][UPDATE_EVENT_PARAMETERS_ENUM.NEW_DATE_TIME.value] if UPDATE_EVENT_PARAMETERS_ENUM.NEW_DATE_TIME.value in fields_to_update else None,
+                            new_recurrency=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][UPDATE_EVENT_PARAMETERS_ENUM.NEW_RECURRENCY.value] if UPDATE_EVENT_PARAMETERS_ENUM.NEW_RECURRENCY.value in fields_to_update else None,
+                            new_fallback_directive=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][UPDATE_EVENT_PARAMETERS_ENUM.NEW_FALLBACK_DIRECTIVE.value] if UPDATE_EVENT_PARAMETERS_ENUM.NEW_FALLBACK_DIRECTIVE.value in fields_to_update else None,
                             new_callback=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][UPDATE_EVENT_PARAMETERS_ENUM.NEW_CALLBACK.value] if UPDATE_EVENT_PARAMETERS_ENUM.NEW_CALLBACK.value in fields_to_update else None)
                     except ValueError as error:
                         stderr.write(str(error))

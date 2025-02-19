@@ -22,7 +22,7 @@ class EventRepository():
         
     def insert_event(self, event_name, timestamp, recurrency, fallback_directive, callback):
         self.cursor.execute(
-            "INSERT INTO events (event_name, timestamp, recurrency, fallback_directive, callback) VALUES (?, ?, ?, ?);",
+            "INSERT INTO events (event_name, timestamp, recurrency, fallback_directive, callback) VALUES (?, ?, ?, ?, ?);",
             (event_name, timestamp, recurrency, fallback_directive, callback)
         )
         self.connection.commit()
