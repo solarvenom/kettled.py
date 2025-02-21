@@ -1,6 +1,6 @@
-from .enums_superclass import GenericEnum
+from enum import IntEnum
 
-class WEEKDAYS_ENUM(GenericEnum):
+class WEEKDAYS_ENUM(IntEnum):
     MONDAY = 0
     TUESDAY = 1
     WEDNESDAY = 2

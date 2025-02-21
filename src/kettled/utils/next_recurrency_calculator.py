@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
-from kettled.constants.enums.weekdays_num import WEEKDAYS_ENUM
+from kettled.constants.enums.weekdays_enum import WEEKDAYS_ENUM
+from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
 
 def get_next_datetime(current_datetime, recurrency):
     if isinstance(current_datetime, str):
@@ -13,53 +14,61 @@ def get_next_datetime(current_datetime, recurrency):
         return current_datetime + timedelta(days=1)
     
     elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_MONDAY:
-        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.MONDAY)
+        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.MONDAY))
     
     elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_TUESDAY:
-        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.TUESDAY)
+        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.TUESDAY))
 
     elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_WEDNESDAY:
-        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.WEDNESDAY)
+        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.WEDNESDAY))
 
     elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_THURSDAY:
-        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.THURSDAY)
+        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.THURSDAY))
 
     elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_FRIDAY:
-        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.FRIDAY)
+        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.FRIDAY))
 
     elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_SATURDAY:
-        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.SATURDAY)
+        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.SATURDAY))
 
     elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_SUNDAY:
-        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.SUNDAY)
+        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.SUNDAY))
     
     if recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_MONDAY:
-        fortnight_week = current_datetime + timedelta(weeks=2)
-        return get_next_weekday(fortnight_week, WEEKDAYS_ENUM.MONDAY)
+        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.MONDAY))
     
     elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_TUESDAY:
-        fortnight_week = current_datetime + timedelta(weeks=2)
-        return get_next_weekday(fortnight_week, WEEKDAYS_ENUM.TUESDAY)
+        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.TUESDAY))
     
     elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_WEDNESDAY:
-        fortnight_week = current_datetime + timedelta(weeks=2)
-        return get_next_weekday(fortnight_week, WEEKDAYS_ENUM.WEDNESDAY)
+        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.WEDNESDAY))
     
     elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_THURSDAY:
-        fortnight_week = current_datetime + timedelta(weeks=2)
-        return get_next_weekday(fortnight_week, WEEKDAYS_ENUM.THURSDAY)
+        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.THURSDAY))
     
     elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_FRIDAY:
-        fortnight_week = current_datetime + timedelta(weeks=2)
-        return get_next_weekday(fortnight_week, WEEKDAYS_ENUM.FRIDAY)
+        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.FRIDAY))
     
     elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_SATURDAY:
-        fortnight_week = current_datetime + timedelta(weeks=2)
-        return get_next_weekday(fortnight_week, WEEKDAYS_ENUM.SATURDAY)
+        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.SATURDAY))
     
     elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_SUNDAY:
-        fortnight_week = current_datetime + timedelta(weeks=2)
-        return get_next_weekday(fortnight_week, WEEKDAYS_ENUM.SUNDAY)
+        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.SUNDAY))
+
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.MONTHLY:
+        try:
+            return get_next_specific_day_of_the_month(current_datetime, current_datetime.day)
+        except ValueError:
+            next_month = current_datetime.month + 1 if current_datetime.month < 12 else 1
+            year_for_next_month = current_datetime.year if next_month < 12 else current_datetime.year + 1
+            next_month_datetime = datetime(
+                year_for_next_month, 
+                next_month, 
+                1, 
+                current_datetime.hour, 
+                current_datetime.minute, 
+                current_datetime.second)
+            return get_next_specific_day_of_the_month(next_month_datetime, current_datetime.day)
 
     elif recurrency == RECURRENCY_OPTIONS_ENUM.FIRST_DAY_OF_THE_MONTH:
         return get_next_specific_day_of_the_month(current_datetime, 1)
@@ -155,7 +164,7 @@ def get_next_datetime(current_datetime, recurrency):
         return get_next_specific_day_of_the_month(current_datetime, 31)
 
     elif recurrency == RECURRENCY_OPTIONS_ENUM.LAST_DAY_OF_THE_MONTH:
-        return get_last_day_of_the_month(current_datetime.year, current_datetime.month)
+        return get_last_day_of_the_month(current_datetime)
 
     elif recurrency == RECURRENCY_OPTIONS_ENUM.SECOND_TO_LAST_DAY_OF_THE_MONTH:
         return get_nth_to_last_day_of_the_month(current_datetime, 2)
@@ -176,7 +185,7 @@ def get_next_datetime(current_datetime, recurrency):
         return get_nth_to_last_day_of_the_month(current_datetime, 7)
 
     else:
-        raise ValueError(f"Unsupported recurrency: {recurrency}")
+        raise ValueError(ERROR_MESSAGES_ENUM.NEXT_RECURRENCY_CALCULATION_ERROR.value)
 
 def get_next_specific_day_of_the_month(current_datetime, day_of_month):
     year = current_datetime.year
@@ -190,14 +199,26 @@ def get_next_specific_day_of_the_month(current_datetime, day_of_month):
                 month = 1
                 year += 1
     
-    next_occurrence = datetime(year, month, day_of_month)
+    next_occurrence = datetime(
+        year, 
+        month, 
+        day_of_month, 
+        current_datetime.hour, 
+        current_datetime.minute, 
+        current_datetime.second)
     
     if next_occurrence <= current_datetime:
         month += 1
         if month > 12:
             month = 1
             year += 1
-        next_occurrence = datetime(year, month, day_of_month)
+        next_occurrence = datetime(
+            year, 
+            month, 
+            day_of_month, 
+            current_datetime.hour, 
+            current_datetime.minute, 
+            current_datetime.second)
     
     return next_occurrence
 
@@ -207,16 +228,39 @@ def get_next_weekday(current_datetime, weekday):
         days_ahead += 7
     return current_datetime + timedelta(days=days_ahead)
 
+def get_next_fortnight_weekday(current_datetime, weekday):
+    if weekday+1 < current_datetime.today().weekday():
+        fortnight_week = current_datetime + timedelta(weeks=1)
+    else:
+        fortnight_week = current_datetime + timedelta(weeks=2)
+    return get_next_weekday(fortnight_week, weekday)
+
 def get_last_day_of_the_month(current_datetime):
     year = current_datetime.year
     month = current_datetime.month
 
     next_month = month + 1 if month < 12 else 1
     year_for_next_month = year if month < 12 else year + 1
-    last_day_of_current_month = (datetime(year_for_next_month, next_month, 1) - timedelta(days=1))
+    last_day_of_current_month = (
+        datetime(
+            year_for_next_month, 
+            next_month, 
+            1,
+            current_datetime.hour, 
+            current_datetime.minute, 
+            current_datetime.second
+            ) - timedelta(days=1))
 
     if current_datetime.date() == last_day_of_current_month.date():
-        return (datetime(year_for_next_month, next_month + 1 if next_month < 12 else 1, 1) - timedelta(days=1))
+        return (
+            datetime(
+                year_for_next_month, 
+                next_month + 1 if next_month < 12 else 1,
+                1,
+                current_datetime.hour, 
+                current_datetime.minute, 
+                current_datetime.second
+                ) - timedelta(days=1))
     
     return last_day_of_current_month
 
