@@ -72,7 +72,6 @@ def test_get_next_datetime(current_datetime, recurrency, expected):
     result = get_next_datetime(current_datetime, recurrency)
     assert result == expected, f"Expected {expected} but got {result}"
 
-@pytest.mark.skip(reason="skip untill next recurrency calculator is tested")
 def test_get_next_datetime_invalid_recurrency():
     with pytest.raises(ValueError) as excinfo:
         get_next_datetime(datetime(2025, 2, 19), "INVALID_RECURRING")

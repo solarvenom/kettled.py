@@ -229,7 +229,7 @@ def get_next_weekday(current_datetime, weekday):
     return current_datetime + timedelta(days=days_ahead)
 
 def get_next_fortnight_weekday(current_datetime, weekday):
-    if weekday+1 < current_datetime.today().weekday():
+    if weekday+2 < current_datetime.today().weekday():
         fortnight_week = current_datetime + timedelta(weeks=1)
     else:
         fortnight_week = current_datetime + timedelta(weeks=2)
