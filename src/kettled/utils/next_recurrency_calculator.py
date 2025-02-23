@@ -7,55 +7,55 @@ def get_next_datetime(current_datetime, recurrency):
     if isinstance(current_datetime, str):
         current_datetime = datetime.fromisoformat(current_datetime)
 
-    if recurrency == RECURRENCY_OPTIONS_ENUM.HOURLY:
+    if recurrency == RECURRENCY_OPTIONS_ENUM.HOURLY.value:
         return current_datetime + timedelta(hours=1)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.DAILY:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.DAILY.value:
         return current_datetime + timedelta(days=1)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_MONDAY:
-        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.MONDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_MONDAY.value:
+        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.MONDAY.value)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_TUESDAY:
-        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.TUESDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_TUESDAY.value:
+        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.TUESDAY.value)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_WEDNESDAY:
-        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.WEDNESDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_WEDNESDAY.value:
+        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.WEDNESDAY.value)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_THURSDAY:
-        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.THURSDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_THURSDAY.value:
+        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.THURSDAY.value)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_FRIDAY:
-        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.FRIDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_FRIDAY.value:
+        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.FRIDAY.value)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_SATURDAY:
-        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.SATURDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_SATURDAY.value:
+        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.SATURDAY.value)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_SUNDAY:
-        return get_next_weekday(current_datetime, int(WEEKDAYS_ENUM.SUNDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EVERY_SUNDAY.value:
+        return get_next_weekday(current_datetime, WEEKDAYS_ENUM.SUNDAY.value)
     
-    if recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_MONDAY:
-        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.MONDAY))
+    if recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_MONDAY.value:
+        return get_next_fortnight_weekday(current_datetime, WEEKDAYS_ENUM.MONDAY.value)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_TUESDAY:
-        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.TUESDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_TUESDAY.value:
+        return get_next_fortnight_weekday(current_datetime, WEEKDAYS_ENUM.TUESDAY.value)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_WEDNESDAY:
-        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.WEDNESDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_WEDNESDAY.value:
+        return get_next_fortnight_weekday(current_datetime, WEEKDAYS_ENUM.WEDNESDAY.value)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_THURSDAY:
-        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.THURSDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_THURSDAY.value:
+        return get_next_fortnight_weekday(current_datetime, WEEKDAYS_ENUM.THURSDAY.value)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_FRIDAY:
-        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.FRIDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_FRIDAY.value:
+        return get_next_fortnight_weekday(current_datetime, WEEKDAYS_ENUM.FRIDAY.value)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_SATURDAY:
-        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.SATURDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_SATURDAY.value:
+        return get_next_fortnight_weekday(current_datetime, WEEKDAYS_ENUM.SATURDAY.value)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_SUNDAY:
-        return get_next_fortnight_weekday(current_datetime, int(WEEKDAYS_ENUM.SUNDAY))
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTNIGHTLY_SUNDAY.value:
+        return get_next_fortnight_weekday(current_datetime, WEEKDAYS_ENUM.SUNDAY.value)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.MONTHLY:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.MONTHLY.value:
         try:
             return get_next_specific_day_of_the_month(current_datetime, current_datetime.day)
         except ValueError:
@@ -70,118 +70,118 @@ def get_next_datetime(current_datetime, recurrency):
                 current_datetime.second)
             return get_next_specific_day_of_the_month(next_month_datetime, current_datetime.day)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FIRST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FIRST_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 1)
     
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.SECOND_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.SECOND_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 2)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRD_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRD_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 3)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FOURTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FOURTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 4)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FIFTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FIFTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 5)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.SIXTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.SIXTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 6)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.SEVENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.SEVENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 7)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EIGHTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EIGHTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 8)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.NINTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.NINTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 9)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 10)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.ELEVENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.ELEVENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 11)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWELFTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWELFTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 12)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRTEENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRTEENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 13)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FOURTEENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FOURTEENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 14)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FIFTEENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FIFTEENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 15)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.SIXTEENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.SIXTEENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 16)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.SEVENTEENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.SEVENTEENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 17)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.EIGHTEENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.EIGHTEENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 18)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.NINETEENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.NINETEENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 19)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTIETH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTIETH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 20)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_FIRST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_FIRST_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 21)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_SECOND_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_SECOND_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 22)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_THIRD_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_THIRD_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 23)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_FOURTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_FOURTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 24)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_FIFTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_FIFTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 25)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_SIXTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_SIXTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 26)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_SEVENTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_SEVENTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 27)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_EIGHTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_EIGHTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 28)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_NINTH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.TWENTY_NINTH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 29)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRTIETH_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRTIETH_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 30)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRTY_FIRST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRTY_FIRST_DAY_OF_THE_MONTH.value:
         return get_next_specific_day_of_the_month(current_datetime, 31)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.LAST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.LAST_DAY_OF_THE_MONTH.value:
         return get_last_day_of_the_month(current_datetime)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.SECOND_TO_LAST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.SECOND_TO_LAST_DAY_OF_THE_MONTH.value:
         return get_nth_to_last_day_of_the_month(current_datetime, 2)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRD_TO_LAST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.THIRD_TO_LAST_DAY_OF_THE_MONTH.value:
         return get_nth_to_last_day_of_the_month(current_datetime, 3)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTH_TO_LAST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FORTH_TO_LAST_DAY_OF_THE_MONTH.value:
         return get_nth_to_last_day_of_the_month(current_datetime, 4)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.FIFTH_TO_LAST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.FIFTH_TO_LAST_DAY_OF_THE_MONTH.value:
         return get_nth_to_last_day_of_the_month(current_datetime, 5)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.SIXTH_TO_LAST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.SIXTH_TO_LAST_DAY_OF_THE_MONTH.value:
         return get_nth_to_last_day_of_the_month(current_datetime, 6)
 
-    elif recurrency == RECURRENCY_OPTIONS_ENUM.SEVENTH_TO_LAST_DAY_OF_THE_MONTH:
+    elif recurrency == RECURRENCY_OPTIONS_ENUM.SEVENTH_TO_LAST_DAY_OF_THE_MONTH.value:
         return get_nth_to_last_day_of_the_month(current_datetime, 7)
 
     else:
