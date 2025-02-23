@@ -17,3 +17,4 @@ class ERROR_MESSAGES_ENUM(GenericEnum):
     UNSUPPORTED_RECURRENCY_OPTION = f"{ICONS_ENUM.SKULL.value}  Unsupported 'recurrency'.\n"
     UNSUPPORTED_FALLBACK_DIRECTIVE = f"{ICONS_ENUM.SKULL.value}  Unsupported 'fallback_directive'.\n"
     NEXT_RECURRENCY_CALCULATION_ERROR = f"{ICONS_ENUM.SKULL.value}  Error when calculating the next recurrency.\n"
+    RELATIVE_DATETIME_CALCULATION_ERROR = f"{ICONS_ENUM.SKULL.value}  Error when calculating relative datetime."

@@ -1,5 +1,6 @@
 from sys import stderr
 from json import dumps
+from datetime import datetime
 from typing import Callable, Union
 from kettled.daemon.daemon import get_daemon_pid
 from kettled.daemon.pipes import pipe_command
@@ -11,6 +12,8 @@ from kettled.constants.enums.pipe_commands_enum import PIPE_COMMANDS_ENUM
 from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
 from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
 from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
+from kettled.constants.enums.relative_datetime_options_enum import RELATIVE_DATETIME_OPTIONS_ENUM
+from kettled.utils.relative_datetime_calculator import calculate_relative_datetime
 from kettled.handlers.handler import Handler
 
 class ImportHandler(Handler):
@@ -27,6 +30,9 @@ class ImportHandler(Handler):
 
             if date_time == "" or date_time == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value)
+            if date_time in RELATIVE_DATETIME_OPTIONS_ENUM.list():
+                now = datetime.now()
+                date_time = calculate_relative_datetime(now, date_time)
 
             recurrency_options = RECURRENCY_OPTIONS_ENUM.list()
             if recurrency != "" and recurrency not in recurrency_options:
@@ -102,6 +108,9 @@ class ImportHandler(Handler):
 
             if new_date_time != "" and new_date_time != None:
                 data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_DATE_TIME.value] = new_date_time
+            if new_date_time in RELATIVE_DATETIME_OPTIONS_ENUM.list():
+                now = datetime.now()
+                data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_DATE_TIME.value] = calculate_relative_datetime(now, new_date_time)
 
             if new_recurrency != "" and new_reccurency != None:
                 if new_recurrency not in RECURRENCY_OPTIONS_ENUM.list():

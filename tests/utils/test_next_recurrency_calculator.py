@@ -74,5 +74,5 @@ def test_get_next_datetime(current_datetime, recurrency, expected):
 
 def test_get_next_datetime_invalid_recurrency():
     with pytest.raises(ValueError) as excinfo:
-        get_next_datetime(datetime(2025, 2, 19), "INVALID_RECURRING")
+        get_next_datetime(datetime(2025, 2, 19, 10, 0, 0), "INVALID_RECURRING_ENUMERABLE")
     assert str(excinfo.value) == ERROR_MESSAGES_ENUM.NEXT_RECURRENCY_CALCULATION_ERROR.value

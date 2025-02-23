@@ -15,6 +15,8 @@ from kettled.constants.enums.terminal_prompts_enum import TERMINAL_PROMPTS_ENUM
 from kettled.constants.enums.icons_enum import ICONS_ENUM
 from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
 from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
+from kettled.constants.enums.relative_datetime_options_enum import RELATIVE_DATETIME_OPTIONS_ENUM
+from kettled.constants.utils.relative_datetime_calculator import calculate_relative_datetime
 from kettled.handlers.handler import Handler
 
 class TerminalHandler(Handler):
@@ -31,6 +33,9 @@ class TerminalHandler(Handler):
             date_time = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_DATE_TIME.value).strip()
             if date_time == "" or date_time == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value)
+            if date_time in RELATIVE_DATETIME_OPTIONS_ENUM.list():
+                now = datetime.now()
+                date_time = calculate_relative_datetime(now, datetime)
             data[EVENT_PARAMETERS_ENUM.DATE_TIME.value] = date_time
             recurrency = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_RECURRENCY.value).strip()
             if recurrency == "" or recurrency == None:
