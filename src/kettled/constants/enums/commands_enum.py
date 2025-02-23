@@ -1,6 +1,6 @@
-from enum import Enum
+from .enums_superclass import GenericEnum
 
-class COMMANDS_ENUM(Enum):
+class COMMANDS_ENUM(GenericEnum):
     START = "start"
     STOP = "stop"
     RESTART = "restart"
