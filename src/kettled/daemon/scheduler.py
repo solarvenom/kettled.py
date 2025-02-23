@@ -106,14 +106,25 @@ class Scheduler:
             stderr.write(ERROR_MESSAGES_ENUM.NO_EVENTS_SCHEDULED.value)
         else:
             for event_name, timestamp in self.index.items():
-                event_list.append([event_index, event_name, datetime.fromtimestamp(timestamp).isoformat()])
+                event_list.append([
+                    event_index, 
+                    event_name, 
+                    datetime.fromtimestamp(timestamp).isoformat(),
+                    self.in_memory_storage[timestamp][event_name][EVENT_PARAMETERS_ENUM.RECURRENCY.value],
+                    self.in_memory_storage[timestamp][event_name][EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value]])
                 event_index += 1
-            list_str = "\n_______________________________________________________\n"
-            list_str += ('| {:^5} | {:^20} | {:^20} |\n'.format(*["Index", "Event Name", "Scheduled Date"]))
-            list_str += "|-----------------------------------------------------|\n"
+            list_str = "\n_______________________________________________________________________________________________________________________\n"
+            list_str += ('| {:^5} | {:^30} | {:^22} | {:^20} | {:^27} |\n'.format(*[
+                "Index", 
+                "Event Name", 
+                "Scheduled Date & Time", 
+                "Recurrency",
+                "Fallback Directive"]))
+            list_str += "|----------------------------------------------------------------------------------------------------------------------|\n"
             for event in event_list:
-                list_str += ('| {:^5} | {:^20} | {:^20} |\n'.format(*event))
-            list_str += "|_______|______________________|______________________|\n"
+                list_str += ('| {:^5} | {:^30} | {:^22} | {:^20} | {:^25} |\n'.format(*event))
+            list_str += "|_______|________________________________|________________________|______________________|_____________________________|\n"
+            list_str += "\n"
             stdout.write(list_str)
 
     def remove(self, event_name) -> None:

@@ -32,7 +32,7 @@ class ImportHandler(Handler):
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value)
             if date_time in RELATIVE_DATETIME_OPTIONS_ENUM.list():
                 now = datetime.now()
-                date_time = calculate_relative_datetime(now, date_time)
+                date_time = str(calculate_relative_datetime(now, date_time))
 
             recurrency_options = RECURRENCY_OPTIONS_ENUM.list()
             if recurrency != "" and recurrency not in recurrency_options:

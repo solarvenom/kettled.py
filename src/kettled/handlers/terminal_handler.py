@@ -35,7 +35,7 @@ class TerminalHandler(Handler):
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value)
             if date_time in RELATIVE_DATETIME_OPTIONS_ENUM.list():
                 now = datetime.now()
-                date_time = calculate_relative_datetime(now, date_time)
+                date_time = str(calculate_relative_datetime(now, date_time))
             data[EVENT_PARAMETERS_ENUM.DATE_TIME.value] = date_time
             recurrency = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_RECURRENCY.value).strip()
             if recurrency == "" or recurrency == None:
@@ -43,7 +43,7 @@ class TerminalHandler(Handler):
             data[EVENT_PARAMETERS_ENUM.RECURRENCY.value] = recurrency
             fallback_directive = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_FALLBACK_DIRECTIVE.value).strip()
             if fallback_directive == "" or fallback_directive == None:
-                fallback_directive = FALLBACK_DIRECTIVES_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE
+                fallback_directive = FALLBACK_DIRECTIVES_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE.value
             data[EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value] = fallback_directive
             callback = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_CALLBACK.value).strip()
             if callback == "" or callback == None:
