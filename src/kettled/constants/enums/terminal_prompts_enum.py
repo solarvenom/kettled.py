@@ -1,5 +1,5 @@
 from .enums_superclass import GenericEnum
-from icons_enum import ICONS_ENUM
+from kettled.constants.enums.icons_enum import ICONS_ENUM
 
 class TERMINAL_PROMPTS_ENUM(GenericEnum):
     ADD_EVENT_NAME = f"{ICONS_ENUM.KETTLE.value} Please enter event name: "

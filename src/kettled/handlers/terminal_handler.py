@@ -11,10 +11,10 @@ from kettled.constants.enums.messages_enum import MESSAGES_ENUM
 from kettled.constants.enums.update_event_parameters_enum import UPDATE_EVENT_PARAMETERS_ENUM
 from kettled.constants.enums.pipe_commands_enum import PIPE_COMMANDS_ENUM
 from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
-from kettled.constants.enum.terminal_propmpts_enum import TERMINAL_PROPMPTS_ENUM
-from kettled.constants.enum.icons_enum import ICONS_ENUM
-from kettled.constants.enum.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
-from kettled.constants.enum.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
+from kettled.constants.enums.terminal_prompts_enum import TERMINAL_PROMPTS_ENUM
+from kettled.constants.enums.icons_enum import ICONS_ENUM
+from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
+from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
 from kettled.handlers.handler import Handler
 
 class TerminalHandler(Handler):
@@ -24,23 +24,23 @@ class TerminalHandler(Handler):
             get_daemon_pid()
             command, data = {}, {}
             command[PIPE_COMMANDS_ENUM.COMMAND.value] = COMMANDS_ENUM.ADD.value
-            event_name = input(TERMINAL_PROPMPTS_ENUM.ADD_EVENT_NAME.value).strip()
+            event_name = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_NAME.value).strip()
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
             data[EVENT_PARAMETERS_ENUM.EVENT_NAME.value] = event_name
-            date_time = input(TERMINAL_PROPMPTS_ENUM.ADD_EVENT_DATE_TIME.value).strip()
+            date_time = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_DATE_TIME.value).strip()
             if date_time == "" or date_time == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value)
             data[EVENT_PARAMETERS_ENUM.DATE_TIME.value] = date_time
-            recurrency = input(TERMINAL_PROPMPTS_ENUM.ADD_EVENT_RECURRENCY.value).strip()
+            recurrency = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_RECURRENCY.value).strip()
             if recurrency == "" or recurrency == None:
                 recurrency = RECURRENCY_OPTIONS_ENUM.NOT_RECURRING
             data[EVENT_PARAMETERS_ENUM.RECURRENCY.value] = recurrency
-            fallback_directive = input(TERMINAL_PROPMPTS_ENUM.ADD_EVENT_FALLBACK_DIRECTIVE.value).strip()
+            fallback_directive = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_FALLBACK_DIRECTIVE.value).strip()
             if fallback_directive == "" or fallback_directive == None:
                 fallback_directive = FALLBACK_DIRECTIVES_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE
             data[EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value] = fallback_directive
-            callback = input(TERMINAL_PROPMPTS_ENUM.ADD_EVENT_CALLBACK.value).strip()
+            callback = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_CALLBACK.value).strip()
             if callback == "" or callback == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_CALLBACK.value)
             data[EVENT_PARAMETERS_ENUM.CALLBACK.value] = callback
@@ -57,7 +57,7 @@ class TerminalHandler(Handler):
             get_daemon_pid()
             command, data = {}, {}
             command[PIPE_COMMANDS_ENUM.COMMAND.value] = COMMANDS_ENUM.DELETE.value
-            event_name = input(TERMINAL_PROPMPTS_ENUM.DELETE_EVENT_NAME.value).strip()
+            event_name = input(TERMINAL_PROMPTS_ENUM.DELETE_EVENT_NAME.value).strip()
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
             data[EVENT_PARAMETERS_ENUM.EVENT_NAME.value] = event_name
@@ -74,20 +74,20 @@ class TerminalHandler(Handler):
             get_daemon_pid()
             command, data = {}, {}
             command[PIPE_COMMANDS_ENUM.COMMAND.value] = COMMANDS_ENUM.UPDATE.value
-            event_name = input(TERMINAL_PROPMPTS_ENUM.UPDATE_EVENT_NAME.value).strip()
+            event_name = input(TERMINAL_PROMPTS_ENUM.UPDATE_EVENT_NAME.value).strip()
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
             data[EVENT_PARAMETERS_ENUM.EVENT_NAME.value] = event_name
-            new_event_name = input(TERMINAL_PROPMPTS_ENUM.UPDATE_NEW_EVENT_NAME.value).strip()
-            new_date_time = input(TERMINAL_PROPMPTS_ENUM.UPDATE_NEW_DATE_TIME.value).strip()
-            new_callback = input(TERMINAL_PROPMPTS_ENUM.UPDATE_NEW_CALLBACK.value).strip()
+            new_event_name = input(TERMINAL_PROMPTS_ENUM.UPDATE_NEW_EVENT_NAME.value).strip()
+            new_date_time = input(TERMINAL_PROMPTS_ENUM.UPDATE_NEW_DATE_TIME.value).strip()
+            new_callback = input(TERMINAL_PROMPTS_ENUM.UPDATE_NEW_CALLBACK.value).strip()
             if (new_event_name == "" or new_event_name == None) and (new_date_time == "" or new_date_time == None) and (new_callback == "" or new_callback == None):
                 raise ValueError(ERROR_MESSAGES_ENUM.INSUFFICIENT_UPDATE_ARGS.value)
-            if new_event_name != "" and new_event_name == not None:
+            if new_event_name != "" and new_event_name != None:
                 data[UPDATE_EVENT_PARAMETERS.NEW_EVENT_NAME.value] = new_event_name
-            if new_date_time != "" and new_date_time == not None:
+            if new_date_time != "" and new_date_time != None:
                 data[UPDATE_EVENT_PARAMETERS.NEW_DATE_TIME.value] = new_date_time
-            if new_callback != "" and new_callback == not None:
+            if new_callback != "" and new_callback != None:
                 data[UPDATE_EVENT_PARAMETERS.NEW_CALLBACK.value] = new_callback
             command[PIPE_COMMANDS_ENUM.DATA.value] = data
             pipe_command(dumps(command))
