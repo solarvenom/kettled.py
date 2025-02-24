@@ -85,15 +85,31 @@ class TerminalHandler(Handler):
             data[EVENT_PARAMETERS_ENUM.EVENT_NAME.value] = event_name
             new_event_name = input(TERMINAL_PROMPTS_ENUM.UPDATE_NEW_EVENT_NAME.value).strip()
             new_date_time = input(TERMINAL_PROMPTS_ENUM.UPDATE_NEW_DATE_TIME.value).strip()
+            new_recurrency = input(TERMINAL_PROMPTS_ENUM.UPDATE_NEW_RECURRENCY.value).strip()
+            if (new_recurrency != "" and new_recurrency != None) and new_recurrency not in RECURRENCY_OPTIONS_ENUM.list():
+                raise ValueError(ERROR_MESSAGES_ENUM.UNSUPPORTED_RECURRENCY_OPTION.value)
+            new_fallback_directive = input(TERMINAL_PROMPTS_ENUM.UPDATE_NEW_FALLBACK_DIRECTIVE.value).strip()
+            if (new_fallback_directive != "" and new_fallback_directive != None) and new_fallback_directive not in FALLBACK_DIRECTIVES_ENUM.list():
+                raise ValueError(ERROR_MESSAGES_ENUM.UNSUPPORTED_FALLBACK_DIRECTIVE.value)
             new_callback = input(TERMINAL_PROMPTS_ENUM.UPDATE_NEW_CALLBACK.value).strip()
-            if (new_event_name == "" or new_event_name == None) and (new_date_time == "" or new_date_time == None) and (new_callback == "" or new_callback == None):
+            if (
+                (new_event_name == "" or new_event_name == None) and 
+                (new_date_time == "" or new_date_time == None) and 
+                (new_callback == "" or new_callback == None) and 
+                (new_recurrency == "" or new_recurrency == None) and 
+                (new_recurrency == "" or new_recurrency == None)
+            ):
                 raise ValueError(ERROR_MESSAGES_ENUM.INSUFFICIENT_UPDATE_ARGS.value)
             if new_event_name != "" and new_event_name != None:
-                data[UPDATE_EVENT_PARAMETERS.NEW_EVENT_NAME.value] = new_event_name
+                data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_EVENT_NAME.value] = new_event_name
             if new_date_time != "" and new_date_time != None:
-                data[UPDATE_EVENT_PARAMETERS.NEW_DATE_TIME.value] = new_date_time
+                data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_DATE_TIME.value] = new_date_time
+            if new_recurrency != "" and new_recurrency != None:
+                data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_RECURRENCY.value] = new_recurrency
+            if new_fallback_directive != "" and new_fallback_directive != None:
+                data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_FALLBACK_DIRECTIVE.value] = new_fallback_directive
             if new_callback != "" and new_callback != None:
-                data[UPDATE_EVENT_PARAMETERS.NEW_CALLBACK.value] = new_callback
+                data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_CALLBACK.value] = new_callback
             command[PIPE_COMMANDS_ENUM.DATA.value] = data
             pipe_command(dumps(command))
         except ValueError as error:
