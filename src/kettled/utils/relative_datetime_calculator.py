@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from kettled.constants.enums.relative_datetime_options_enum import RELATIVE_DATETIME_OPTIONS_ENUM
 from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.utils.next_recurrency_calculator import get_next_datetime
+from kettled.utils.next_recurrency_calculator import calculate_next_recurrency
 from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
 
 def calculate_relative_datetime(current_datetime, relative_datetime_enumerable):
@@ -32,6 +32,6 @@ def calculate_relative_datetime(current_datetime, relative_datetime_enumerable):
     elif relative_datetime_enumerable == RELATIVE_DATETIME_OPTIONS_ENUM.TWO_WEEKS.value:
         return current_datetime + timedelta(weeks=2)
     elif relative_datetime_enumerable == RELATIVE_DATETIME_OPTIONS_ENUM.ONE_MONTH.value:
-        return get_next_datetime(current_datetime, RECURRENCY_OPTIONS_ENUM.MONTHLY.value)
+        return calculate_next_recurrency(current_datetime, RECURRENCY_OPTIONS_ENUM.MONTHLY.value)
     else:
         raise ValueError(ERROR_MESSAGES_ENUM.RELATIVE_DATETIME_CALCULATION_ERROR.value)

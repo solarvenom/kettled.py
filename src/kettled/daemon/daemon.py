@@ -10,7 +10,7 @@ from kettled.constants.enums.messages_enum import MESSAGES_ENUM
 from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
 from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
 from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
-from kettled.utils.next_recurrency_calculator import get_next_datetime
+from kettled.utils.next_recurrency_calculator import calculate_next_recurrency
 from kettled.daemon.scheduler import Scheduler
 from kettled.daemon.pipes import read_pipe
 
@@ -21,8 +21,8 @@ def get_daemon_pid():
     return pid
 
 class Daemon:
-    def __init__(self, persistent_session = False):
-        self.persistent_session = persistent_session
+    def __init__(self, in_memory_only_session = False):
+        self.in_memory_only_session = in_memory_only_session
         self.scheduler = None
         self.pipe_updated_at = 0
 
@@ -101,40 +101,13 @@ class Daemon:
 
     def run(self):
         stdout.write(MESSAGES_ENUM.IS_STARTED.value)
-        self.scheduler = Scheduler(persistent_session=self.persistent_session)
-        try:
-            current_timestamp = int(datetime.now().timestamp())
-            outdated_events = [key for key in self.scheduler.in_memory_storage if key < current_timestamp]
-            outdated_events_to_execute = []
-            print(f"************* self.scheduler.in_memory_storage ****************")
-            print(self.scheduler.in_memory_storage)
-            print(f"************* self.scheduler.in_memory_storage ****************")
-            for outdated_event in outdated_events:
-                fallback_directive = outdated_event[EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value]
-                print(f"************* outdated_event ****************")
-                print(outdated_event)
-                print(f"************* outdated_event ****************")
-                if fallback_directive != FALLBACK_DIRECTIVES_ENUM.IGNORE:
-                    outdated_events_to_execute.append(outdated_event)
-                # self.scheduler.in_memory_storage.pop(key)
-                # self.scheduler.remove(event_name=outdated_event[key][EVENT_PARAMETERS_ENUM.EVENT_NAME.value])
-                
-            # for event in outdated_events_to_execute:
-            #     if fallback_directive != FALLBACK_DIRECTIVES_ENUM.IGNORE:
-            #         if fallback_directive == FALLBACK_DIRECTIVES_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE:
-            #             outdated_events_to_execute.append(self.scheduler.in_memory_storage[key])
-            #         elif fallback_directive == FALLBACK_DIRECTIVES_ENUM.EXECUTE_ON_NEXT_RECURRENCY:
-            #             self.scheduler.set(
-            #                 event_name=, date_time, recurrency, fallback_directive, callback
-            #             )
-        except KeyError:
-            pass
+        self.scheduler = Scheduler(in_memory_only_session=self.in_memory_only_session)
         while True:
             current_timestamp = int(datetime.now().timestamp())
             try:
                 current_timestamp_events = self.scheduler.in_memory_storage[current_timestamp]
                 for event_name, event_details in current_timestamp_events.items():
-                    execute_scheduled_events(event_details)
+                    self.scheduler.execute_event(event_details)
             except KeyError:
                 pass
             current_pipe_updated_at = path.getmtime(PIPE_FILE)
@@ -142,18 +115,3 @@ class Daemon:
                 self.pipe_updated_at = current_pipe_updated_at
                 read_pipe(self)
             sleep(0.5)
-
-    def execute_scheduled_events(self, event_details):
-        eval(event_details[EVENT_PARAMETERS_ENUM.CALLBACK.value]())
-
-        self.scheduler.remove(event_name=event_name)
-
-        if event_details[EVENT_PARAMETERS_ENUM.RECURRENCY.value] != RECURRENCY_OPTIONS_ENUM.NOT_RECURRING.value:
-            next_date_time = get_next_datetime(event_details[EVENT_PARAMETERS_ENUM.DATE_TIME.value], event_details[EVENT_PARAMETERS_ENUM.RECURRENCY.value])
-            self.scheduler.set(
-                event_name = event_name,
-                date_time = next_date_time,
-                recurrency = event_details[EVENT_PARAMETERS_ENUM.RECURRENCY.value],
-                fallback_directive = event_details[EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value],
-                callback = event_details[EVENT_PARAMETERS_ENUM.CALLBACK.value]
-            )

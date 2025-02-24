@@ -9,23 +9,46 @@ from kettled.constants.enums.repository_event_parameters_enum import REPOSITORY_
 from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
 from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
 from kettled.database.event_repository import EventRepository
+from kettled.utils.next_recurrency_calculator import calculate_next_recurrency
 
 class Scheduler:
-    def __init__(self, persistent_session=False):
+    def __init__(self, in_memory_only_session=False):
         self.in_memory_storage: dict[int, dict[str, dict]] = {}
         self.index: dict[str, int] = {}
-        self.persistent_session: bool = persistent_session
+        self.in_memory_only_session: bool = in_memory_only_session
         self.event_repository: EventRepository
-        if self.persistent_session:
+        if self.in_memory_only_session != True:
             self.event_repository = EventRepository()
-            scheduled_events = self.event_repository.get_all_events()
-            for event in scheduled_events:
-                self.set(
-                    event_name=event[REPOSITORY_EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
-                    date_time=event[REPOSITORY_EVENT_PARAMETERS_ENUM.TIMESTAMP.value],
-                    recurrency=event[REPOSITORY_EVENT_PARAMETERS_ENUM.RECURRENCY.value],
-                    fallback_directive=event[REPOSITORY_EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value],
-                    callback=event[REPOSITORY_EVENT_PARAMETERS_ENUM.CALLBACK.value])
+            stored_events = self.event_repository.get_all_events()
+
+            now = datetime.now().timestamp()
+            outdated_events = [event for event in stored_events if event[REPOSITORY_EVENT_PARAMETERS_ENUM.TIMESTAMP.value] < now and event[REPOSITORY_EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value] != FALLBACK_DIRECTIVES_ENUM.IGNORE.value]
+            events_to_schedule = [event for event in stored_events if event[REPOSITORY_EVENT_PARAMETERS_ENUM.TIMESTAMP.value] >= now]
+
+            try:
+                for outdated_event in outdated_events:
+                    fallback_directive = outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value]
+                    if fallback_directive == FALLBACK_DIRECTIVES_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE.value:
+                        self.execute_event(outdated_event, remove_after_execution=False)
+                    elif fallback_directive == FALLBACK_DIRECTIVES_ENUM.EXECUTE_ON_NEXT_RECURRENCY.value:
+                        next_recurrency = calculate_next_recurrency(now, outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.RECURRENCY.value])
+                        self.set(
+                            event_name=outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
+                            date_time=next_recurrency,
+                            recurrency=outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.RECURRENCY.value],
+                            fallback_directive=outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value],
+                            callback=outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.CALLBACK.value],
+                        )
+                for event_to_schedule in events_to_schedule:
+                    self.set(
+                        event_name=event[REPOSITORY_EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
+                        date_time=event[REPOSITORY_EVENT_PARAMETERS_ENUM.TIMESTAMP.value],
+                        recurrency=event[REPOSITORY_EVENT_PARAMETERS_ENUM.RECURRENCY.value],
+                        fallback_directive=event[REPOSITORY_EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value],
+                        callback=event[REPOSITORY_EVENT_PARAMETERS_ENUM.CALLBACK.value],
+                        store_in_db=False)
+            except KeyError:
+                pass
     
     @staticmethod
     def get_timestamp(date) -> int:
@@ -62,7 +85,14 @@ class Scheduler:
             EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value: fallback_directive,
             EVENT_PARAMETERS_ENUM.CALLBACK.value: callback }
 
-    def set(self, event_name, date_time, recurrency, fallback_directive, callback) -> None:
+    def set(
+        self,
+        event_name, 
+        date_time, 
+        recurrency, 
+        fallback_directive, 
+        callback,
+        store_in_db=True) -> None:
         if event_name == None or event_name == "":
             raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
         if event_name in self.index.keys():
@@ -91,7 +121,7 @@ class Scheduler:
         self.in_memory_storage[timestamp][event_name][EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value] = fallback_directive
         self.in_memory_storage[timestamp][event_name][EVENT_PARAMETERS_ENUM.CALLBACK.value] = lambda: self.wrap_callback(callback)
         self.index[event_name] = timestamp
-        if self.persistent_session:
+        if self.in_memory_only_session != True and store_in_db == True:
             self.event_repository.insert_event(
                 event_name=event_name,
                 timestamp=timestamp,
@@ -136,7 +166,7 @@ class Scheduler:
         else:
             self.in_memory_storage.pop(event_timestamp)
         self.index.pop(event_name)
-        if self.persistent_session:
+        if self.in_memory_only_session != True:
             self.event_repository.delete_event_by_name(event_name=event_name)
 
     def update(
@@ -180,7 +210,7 @@ class Scheduler:
             recurrency=event_to_update[EVENT_PARAMETERS_ENUM.RECURRENCY.value],
             fallback_directive=event_to_update[EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value],
             callback=event_to_update[EVENT_PARAMETERS_ENUM.CALLBACK.value])
-        if self.persistent_session:
+        if self.in_memory_only_session != True:
             self.event_repository.update_event_by_name(
                 event_name=event_name,
                 new_event_name=event_to_update[EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
@@ -192,3 +222,19 @@ class Scheduler:
     @staticmethod
     def wrap_callback(event_callback) -> Callable:
         return event_callback
+
+    def execute_event(self, event, remove_after_execution=True):
+        eval(event[EVENT_PARAMETERS_ENUM.CALLBACK.value])
+
+        if remove_after_execution:
+            self.remove(event_name=event[EVENT_PARAMETERS_ENUM.EVENT_NAME.value])
+
+        if event[EVENT_PARAMETERS_ENUM.RECURRENCY.value] != RECURRENCY_OPTIONS_ENUM.NOT_RECURRING.value:
+            next_date_time = calculate_next_recurrency(event[EVENT_PARAMETERS_ENUM.DATE_TIME.value], event[EVENT_PARAMETERS_ENUM.RECURRENCY.value])
+            self.set(
+                event_name = event[EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
+                date_time = next_date_time,
+                recurrency = event[EVENT_PARAMETERS_ENUM.RECURRENCY.value],
+                fallback_directive = event[EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value],
+                callback = event[EVENT_PARAMETERS_ENUM.CALLBACK.value]
+            )

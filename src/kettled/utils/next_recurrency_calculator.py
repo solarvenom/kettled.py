@@ -3,7 +3,7 @@ from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_E
 from kettled.constants.enums.weekdays_enum import WEEKDAYS_ENUM
 from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
 
-def get_next_datetime(current_datetime, recurrency):
+def calculate_next_recurrency(current_datetime, recurrency):
     if isinstance(current_datetime, str):
         current_datetime = datetime.fromisoformat(current_datetime)
 
