@@ -5,9 +5,13 @@ from atexit import register
 from datetime import datetime
 from signal import SIGTERM
 from kettled.constants.env import PID_FILE, PIPE_FILE
-from kettled.constants.enums import ICONS
+from kettled.constants.enums.icons_enum import ICONS_ENUM
+from kettled.constants.enums.messages_enum import MESSAGES_ENUM
+from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
+from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
+from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
+from kettled.utils.next_recurrency_calculator import calculate_next_recurrency
 from kettled.daemon.scheduler import Scheduler
-from kettled.constants.enums import MESSAGES
 from kettled.daemon.pipes import read_pipe
 
 def get_daemon_pid():
@@ -17,8 +21,8 @@ def get_daemon_pid():
     return pid
 
 class Daemon:
-    def __init__(self, persistent_session = False):
-        self.persistent_session = persistent_session
+    def __init__(self, in_memory_only_session = False):
+        self.in_memory_only_session = in_memory_only_session
         self.scheduler = None
         self.pipe_updated_at = 0
 
@@ -27,8 +31,8 @@ class Daemon:
             pid = fork()
             if pid > 0:
                 exit(0)
-        except OSError as e:
-            stderr.write(f"{ICONS.SKULL.value} Fork #1 failed: {e.errno} {e.strerror}\n")
+        except OSError as error:
+            stderr.write(f"{ICONS_ENUM.SKULL.value} Fork #1 failed: {error.errno} {error.strerror}\n")
             exit(1)
         chdir("/")
         setsid()
@@ -38,8 +42,8 @@ class Daemon:
             pid = fork()
             if pid > 0:
                 exit(0)
-        except OSError as e:
-            stderr.write(f"{ICONS.SKULL.value} Fork #2 failed: {e.errno} {e.strerror}\n")
+        except OSError as error:
+            stderr.write(f"{ICONS_ENUM.SKULL.value} Fork #2 failed: {error.errno} {error.strerror}\n")
             exit(1)
         
         register(self.del_tmp_files)
@@ -61,7 +65,7 @@ class Daemon:
             pid = None
 
         if pid:
-            stderr.write(MESSAGES.IS_ALREADY_RUNNING.value)
+            stderr.write(MESSAGES_ENUM.IS_ALREADY_RUNNING.value)
             exit(1)
         self.daemonize()
         self.run()
@@ -73,38 +77,37 @@ class Daemon:
         except IOError:
             pid = None
         if not pid:
-            stderr.write(MESSAGES.IS_NOT_RUNNING.value)
+            stderr.write(MESSAGES_ENUM.IS_NOT_RUNNING.value)
             return
         try:
             while 1:
                 kill(pid, SIGTERM)
                 sleep(0.1)
-        except OSError as err:
-            err = str(err)
-            if err.find("No such process") > 0:
+        except OSError as error:
+            error = str(error)
+            if error.find("No such process") > 0:
                 if path.exists(PID_FILE):
                     remove(PID_FILE)
                     remove(PIPE_FILE)
             else:
-                stderr.write(err)
+                stderr.write(error)
                 exit(1)
         finally:
-            stdout.write(MESSAGES.IS_TERMINATED.value)
+            stdout.write(MESSAGES_ENUM.IS_TERMINATED.value)
     
     def list(self):
         if self.scheduler:
             self.scheduler.list()
 
     def run(self):
-        stdout.write(MESSAGES.IS_STARTED.value)
-        self.scheduler = Scheduler(persistent_session=self.persistent_session)
+        stdout.write(MESSAGES_ENUM.IS_STARTED.value)
+        self.scheduler = Scheduler(in_memory_only_session=self.in_memory_only_session)
         while True:
             current_timestamp = int(datetime.now().timestamp())
             try:
                 current_timestamp_events = self.scheduler.in_memory_storage[current_timestamp]
-                for event_name, event_callback in current_timestamp_events.items():
-                    eval(event_callback())
-                    self.scheduler.remove(event_name=event_name)
+                for event_name, event_details in current_timestamp_events.items():
+                    self.scheduler.execute_event(event_details)
             except KeyError:
                 pass
             current_pipe_updated_at = path.getmtime(PIPE_FILE)

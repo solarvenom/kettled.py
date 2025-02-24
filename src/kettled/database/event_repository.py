@@ -14,14 +14,16 @@ class EventRepository():
                                 id INTEGER PRIMARY KEY,
                                 event_name TEXT UNIQUE NOT NULL,
                                 timestamp TIMESTAMP NOT NULL,
+                                recurrency TEXT NOT NULL,
+                                fallback_directive TEXT NOT NULL,
                                 callback TEXT NOT NULL);
                             """)
         self.connection.commit()
         
-    def insert_event(self, event_name, timestamp, callback):
+    def insert_event(self, event_name, timestamp, recurrency, fallback_directive, callback):
         self.cursor.execute(
-            "INSERT INTO events (event_name, timestamp, callback) VALUES (?, ?, ?);",
-            (event_name, timestamp, callback)
+            "INSERT INTO events (event_name, timestamp, recurrency, fallback_directive, callback) VALUES (?, ?, ?, ?, ?);",
+            (event_name, timestamp, recurrency, fallback_directive, callback)
         )
         self.connection.commit()
 
@@ -29,17 +31,30 @@ class EventRepository():
         self.cursor.execute("DELETE FROM events WHERE event_name = ?;", (event_name,))
         self.connection.commit()
 
-    def update_event_by_name(self, event_name, new_event_name = None, new_timestamp = None, new_callback = None):
+    def update_event_by_name(
+        self, 
+        event_name, 
+        new_event_name = None, 
+        new_timestamp = None,
+        new_recurrency = None, 
+        new_fallback_directive = None,
+        new_callback = None):
         updates = []
         params = []
         query = "UPDATE events SET"
-        if new_event_name is not None: 
+        if new_event_name != None: 
             updates.append("event_name = ?")
             params.append(event_name)
-        if new_timestamp is not None: 
+        if new_timestamp != None: 
             updates.append("timestamp = ?")
             params.append(new_timestamp)
-        if new_callback is not None:
+        if new_recurrency != None:
+            updates.append("recurrency = ?")
+            params.append(new_recurrency)
+        if new_fallback_directive != None:
+            updates.append("fallback_directive = ?")
+            params.append(new_fallback_directive)
+        if new_callback != None:
             updates.append("callback = ?")
             params.append(new_callback)
         query += " " + ", ".join(updates)

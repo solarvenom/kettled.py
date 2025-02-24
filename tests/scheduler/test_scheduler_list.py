@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 from kettled.daemon.scheduler import Scheduler
 from tests.utils import init_scheduler_set_event, get_future_datetime
-from kettled.constants.enums import ERROR_MESSAGES
+from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
 import tests.seeds as seeds
 
 tomorrows_datetime = get_future_datetime(1)
@@ -27,4 +27,4 @@ def test_list_empty_storage_fail_case(capsys):
     try:
         test_instance.list()
     except ValueError as error:
-        assert str(error) == ERROR_MESSAGES.NO_EVENTS_SCHEDULED.value
+        assert str(error) == ERROR_MESSAGES_ENUM.NO_EVENTS_SCHEDULED.value
