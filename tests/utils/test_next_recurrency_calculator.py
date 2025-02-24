@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
 from kettled.constants.enums.weekdays_enum import WEEKDAYS_ENUM
 from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.utils.next_recurrency_calculator import get_next_datetime
+from kettled.utils.next_recurrency_calculator import calculate_next_recurrency
 
 @pytest.mark.parametrize("current_datetime, recurrency, expected", [
     ("2025-02-19T10:00:00", RECURRENCY_OPTIONS_ENUM.HOURLY.value, datetime(2025, 2, 19, 11, 0, 0)),
@@ -66,13 +66,13 @@ from kettled.utils.next_recurrency_calculator import get_next_datetime
     (datetime(2025, 2, 19, 10, 0, 0), RECURRENCY_OPTIONS_ENUM.SEVENTH_TO_LAST_DAY_OF_THE_MONTH.value, datetime(2025, 2, 22, 10, 0, 0)),
 ])
 
-def test_get_next_datetime(current_datetime, recurrency, expected):
+def test_calculate_next_recurrency(current_datetime, recurrency, expected):
     if isinstance(current_datetime, str):
         current_datetime = datetime.fromisoformat(current_datetime)
-    result = get_next_datetime(current_datetime, recurrency)
+    result = calculate_next_recurrency(current_datetime, recurrency)
     assert result == expected, f"Expected {expected} but got {result}"
 
-def test_get_next_datetime_invalid_recurrency():
+def test_calculate_next_recurrency_invalid_recurrency():
     with pytest.raises(ValueError) as excinfo:
-        get_next_datetime(datetime(2025, 2, 19, 10, 0, 0), "INVALID_RECURRING_ENUMERABLE")
+        calculate_next_recurrency(datetime(2025, 2, 19, 10, 0, 0), "INVALID_RECURRING_ENUMERABLE")
     assert str(excinfo.value) == ERROR_MESSAGES_ENUM.NEXT_RECURRENCY_CALCULATION_ERROR.value

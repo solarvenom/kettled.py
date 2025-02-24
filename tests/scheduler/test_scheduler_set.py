@@ -10,7 +10,7 @@ tomorrows_datetime = get_future_datetime(1)
 tomorrows_timestamp = int(datetime.timestamp(tomorrows_datetime))
 
 def test_set_event_success_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     test_instance.set(
         event_name=seeds.EVENT_NAME, 
         date_time=str(tomorrows_datetime), 
@@ -21,7 +21,7 @@ def test_set_event_success_case():
     assert test_instance.index[seeds.EVENT_NAME] == tomorrows_timestamp
 
 def test_set_event_with_duplicate_name_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     test_instance.set(
         event_name=seeds.EVENT_NAME, 
         date_time=str(tomorrows_datetime), 
@@ -41,7 +41,7 @@ def test_set_event_with_duplicate_name_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.EVENT_NAME_NOT_UNIQUE.value
 
 def test_set_event_with_none_name_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name=None, 
@@ -53,7 +53,7 @@ def test_set_event_with_none_name_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value
 
 def test_set_event_with_name_empty_string_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name="", 
@@ -65,7 +65,7 @@ def test_set_event_with_name_empty_string_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value
 
 def test_set_event_with_datetime_none_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name=seeds.EVENT_NAME, 
@@ -77,7 +77,7 @@ def test_set_event_with_datetime_none_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value
 
 def test_set_event_with_datetime_empty_string_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name=seeds.EVENT_NAME, 
@@ -89,7 +89,7 @@ def test_set_event_with_datetime_empty_string_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value
 
 def test_set_event_with_datetime_timestamp_integer_success_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     test_instance.set(
         event_name=seeds.EVENT_NAME, 
         date_time=tomorrows_timestamp, 
@@ -100,7 +100,7 @@ def test_set_event_with_datetime_timestamp_integer_success_case():
     assert test_instance.index[seeds.EVENT_NAME] == tomorrows_timestamp
 
 def test_set_event_with_datetime_timestamp_string_success_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     test_instance.set(
         event_name=seeds.EVENT_NAME, 
         date_time=str(tomorrows_timestamp),
@@ -111,7 +111,7 @@ def test_set_event_with_datetime_timestamp_string_success_case():
     assert test_instance.index[seeds.EVENT_NAME] == tomorrows_timestamp
 
 def test_set_event_with_unsupported_datetime_formate_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name=seeds.EVENT_NAME, 
@@ -124,7 +124,7 @@ def test_set_event_with_unsupported_datetime_formate_fail_case():
 
 @pytest.mark.skip(reason="skip untill .set() function datetime input rework")
 def test_set_event_with_outdated_datetime_timestamp_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name=seeds.EVENT_NAME, 
@@ -136,7 +136,7 @@ def test_set_event_with_outdated_datetime_timestamp_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.TIMESTAMP_OUTDATED.value
 
 def test_set_event_with_outdated_datetime_string_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name=seeds.EVENT_NAME, 
@@ -148,7 +148,7 @@ def test_set_event_with_outdated_datetime_string_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.TIMESTAMP_OUTDATED.value
 
 def test_set_event_with_callback_none_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name=seeds.EVENT_NAME, 
@@ -160,7 +160,7 @@ def test_set_event_with_callback_none_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.MISSING_EVENT_CALLBACK.value
 
 def test_set_event_with_callback_empty_string_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     try:
         test_instance.set(
             event_name=seeds.EVENT_NAME, 
@@ -172,7 +172,7 @@ def test_set_event_with_callback_empty_string_fail_case():
         assert str(error) == ERROR_MESSAGES_ENUM.MISSING_EVENT_CALLBACK.value
 
 def test_set_event_with_existing_name_with_spaces_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     test_instance.set(
         event_name=seeds.EVENT_NAME, 
         date_time=str(tomorrows_timestamp), 
