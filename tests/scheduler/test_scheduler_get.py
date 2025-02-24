@@ -8,7 +8,7 @@ tomorrows_date_time = get_future_datetime(1)
 tomorrows_timestamp = int(datetime.timestamp(tomorrows_date_time))
 
 def test_get_success_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     test_instance.set(
         event_name=seeds.EVENT_NAME, 
         date_time=str(tomorrows_date_time), 
@@ -25,7 +25,7 @@ def test_get_success_case():
     assert added_event[EVENT_PARAMETERS_ENUM.CALLBACK.value]()() == seeds.EVENT_CALLBACK_VALUE
 
 def test_get_fail_case():
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     test_instance.set(
         event_name=seeds.EVENT_NAME, 
         date_time=str(tomorrows_date_time), 

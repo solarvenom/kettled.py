@@ -3,7 +3,7 @@ from kettled.daemon.scheduler import Scheduler
 import tests.seeds as seeds
 
 def init_scheduler_set_event(event_datetime):
-    test_instance = Scheduler()
+    test_instance = Scheduler(in_memory_only_session=True)
     test_instance.set(
         event_name=seeds.EVENT_NAME,
         date_time=str(event_datetime),
