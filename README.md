@@ -68,8 +68,10 @@ To update a scheduled event issue `kettled update` and go through the prompts to
 user@pc$ kettled update
 🫖 Please enter the name of event be modified: readme_event
 🫖 Please enter the new event name or leave blank to leave unchanged: updated_readme_event
-🫖 Please enter the new event schdeuled date or leave blank to leave unchanged: 
-🫖 Please enter the new event callback or leave blank to leave unchanged: 
+🫖 Please enter the new event schdeuled date or leave blank to keep unchanged: 
+🫖 Please enter the new event recurrency or leave blank to keep unchanged: 
+🫖 Please enter the new event fallback directive or leave blank to keep unchanged: 
+🫖 Please enter the new event callback or leave blank to keep unchanged: 
 ```
 
 To check all scheduled events just issue `kettled list`:
