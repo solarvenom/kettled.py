@@ -23,7 +23,7 @@ The following example shows how `Kettled` is instantiated and how basic `events`
 ```py
 import datetime as dt
 
-from kettled import Kettled, RECURRENCY_OPTIONS_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM
+from kettled import Kettled, RECURRENCY_OPTIONS_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM, FALLBACK_DIRECTIVES_ENUM
 
 def foo():
     print("foo")
@@ -37,11 +37,11 @@ kettled.add(
     event_name="readme_event", 
     date_time=event_datetime, 
     recurrency=RECURRENCY_OPTIONS_ENUM.NOT_RECURRING.value,
-    fallback_directive=RELATIVE_DATETIME_OPTIONS_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE,
+    fallback_directive=FALLBACK_DIRECTIVES_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE.value,
     callback=foo
-    )
+)
 
-kettled.update(event_name="readme_event", new_date_time=event_datetime + dt.timedelta(minutes=30))
+kettled.update(event_name="readme_event", new_date_time=RELATIVE_DATETIME_OPTIONS_ENUM.THIRTY_MINUTES.value)
 
 kettled.delete(event_name="readme_event")
 ```
