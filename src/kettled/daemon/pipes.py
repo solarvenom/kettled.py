@@ -1,11 +1,10 @@
 from sys import stderr
 from json import loads
 from kettled.constants.env import PIPE_FILE
-from kettled.constants.enums.pipe_commands_enum import PIPE_COMMANDS_ENUM
-from kettled.constants.enums.commands_enum import COMMANDS_ENUM
-from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.update_event_parameters_enum import UPDATE_EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
+from kettled.constants import (
+    PIPE_COMMANDS_ENUM, COMMANDS_ENUM, EVENT_PARAMETERS_ENUM,
+    UPDATE_EVENT_PARAMETERS_ENUM, ERROR_MESSAGES_ENUM
+)
 
 def pipe_command(command_json):
         with open(PIPE_FILE, 'w') as pipe:

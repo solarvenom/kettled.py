@@ -5,17 +5,12 @@ from datetime import datetime
 from kettled.constants.env import DAEMON_NAME, PID_FILE
 from kettled.daemon.daemon import get_daemon_pid
 from kettled.daemon.pipes import pipe_command
-from kettled.constants.enums.commands_enum import COMMANDS_ENUM
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.constants.enums.messages_enum import MESSAGES_ENUM
-from kettled.constants.enums.update_event_parameters_enum import UPDATE_EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.pipe_commands_enum import PIPE_COMMANDS_ENUM
-from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.terminal_prompts_enum import TERMINAL_PROMPTS_ENUM
-from kettled.constants.enums.icons_enum import ICONS_ENUM
-from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
-from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
-from kettled.constants.enums.relative_datetime_options_enum import RELATIVE_DATETIME_OPTIONS_ENUM
+from kettled.constants import (
+    COMMANDS_ENUM, ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
+    UPDATE_EVENT_PARAMETERS_ENUM, PIPE_COMMANDS_ENUM,
+    EVENT_PARAMETERS_ENUM, TERMINAL_PROMPTS_ENUM, ICONS_ENUM,
+    RECURRENCY_OPTIONS_ENUM, FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM
+)
 from kettled import utils
 from kettled.handlers.handler import Handler
 

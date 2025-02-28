@@ -1,6 +1,6 @@
 from sys import stderr
 from kettled.daemon.daemon import Daemon, get_daemon_pid
-from kettled.constants.enums.messages_enum import MESSAGES_ENUM
+from kettled.constants import MESSAGES_ENUM
 
 class Handler:
     def __init__(self, in_memory_only_session=False):
