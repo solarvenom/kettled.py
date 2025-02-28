@@ -10,8 +10,8 @@ from kettled.constants import (
     RECURRENCY_OPTIONS_ENUM, FALLBACK_DIRECTIVES_ENUM
 )
 from kettled.utils import calculate_next_recurrency
-from kettled.daemon.scheduler import Scheduler
-from kettled.daemon.pipes import read_pipe
+from kettled.daemon import Scheduler
+from kettled.daemon import read_pipe
 
 def get_daemon_pid():
     pf = open(PID_FILE,'r')

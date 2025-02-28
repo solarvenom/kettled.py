@@ -1,5 +1,5 @@
 from sys import stderr
-from kettled.daemon.daemon import Daemon, get_daemon_pid
+from kettled.daemon import Daemon, get_daemon_pid
 from kettled.constants import MESSAGES_ENUM
 
 class Handler:

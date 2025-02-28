@@ -3,8 +3,7 @@ from sys import stderr, stdout
 from json import dumps
 from datetime import datetime
 from kettled.constants.env import DAEMON_NAME, PID_FILE
-from kettled.daemon.daemon import get_daemon_pid
-from kettled.daemon.pipes import pipe_command
+from kettled.daemon import get_daemon_pid, pipe_command
 from kettled.constants import (
     COMMANDS_ENUM, ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
     UPDATE_EVENT_PARAMETERS_ENUM, PIPE_COMMANDS_ENUM,

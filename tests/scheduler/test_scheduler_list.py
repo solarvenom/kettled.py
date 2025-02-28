@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from kettled.daemon.scheduler import Scheduler
+from kettled.daemon import Scheduler
 from tests.utils import init_scheduler_set_event, get_future_datetime
 from kettled.constants import ERROR_MESSAGES_ENUM
 import tests.seeds as seeds
