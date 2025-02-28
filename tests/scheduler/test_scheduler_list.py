@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 from kettled.daemon.scheduler import Scheduler
 from tests.utils import init_scheduler_set_event, get_future_datetime
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
+from kettled.constants import ERROR_MESSAGES_ENUM
 import tests.seeds as seeds
 
 tomorrows_datetime = get_future_datetime(1)
