@@ -10,7 +10,7 @@ from kettled.constants import (
     FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM
 )
 from kettled.utils import calculate_relative_datetime
-from kettled.handlers.handler import Handler
+from kettled.handlers import Handler
 
 class ImportHandler(Handler):
     @staticmethod

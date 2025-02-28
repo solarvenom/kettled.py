@@ -11,7 +11,7 @@ from kettled.constants import (
     RECURRENCY_OPTIONS_ENUM, FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM
 )
 from kettled import utils
-from kettled.handlers.handler import Handler
+from kettled.handlers import Handler
 
 class TerminalHandler(Handler):
     @staticmethod

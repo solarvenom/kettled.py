@@ -1,4 +1,4 @@
-from kettled.handlers.import_handler import ImportHandler as Kettled
+from kettled.handlers import ImportHandler as Kettled
 from kettled.constants import (
     RECURRENCY_OPTIONS_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM, 
     FALLBACK_DIRECTIVES_ENUM, EVENT_PARAMETERS_ENUM

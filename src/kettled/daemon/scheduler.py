@@ -7,7 +7,7 @@ from kettled.constants import (
     REPOSITORY_EVENT_PARAMETERS_ENUM, RECURRENCY_OPTIONS_ENUM,
     FALLBACK_DIRECTIVES_ENUM
 )
-from kettled.database.event_repository import EventRepository
+from kettled.database import EventRepository
 from kettled import utils
 
 class Scheduler:
