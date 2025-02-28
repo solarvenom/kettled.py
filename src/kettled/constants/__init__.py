@@ -2,7 +2,7 @@ from .date_formats import DATE_FORMATS
 from .enums.commands_enum import COMMANDS_ENUM
 from .enums.error_messages_enum import ERROR_MESSAGES_ENUM
 from .enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
-from .enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
+from .enums.fallback_directives_enum import FALLBACK_DIRECTIVES_ENUM
 from .enums.icons_enum import ICONS_ENUM
 from .enums.messages_enum import MESSAGES_ENUM
 from .enums.pipe_commands_enum import PIPE_COMMANDS_ENUM
