@@ -1,4 +1,4 @@
-from sys import stderr, stdout
+from sys import stderr
 from json import dumps
 from datetime import datetime
 from typing import Callable, Union
