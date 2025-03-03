@@ -1,4 +1,4 @@
-from kettled.daemon.scheduler import Scheduler
+from kettled.daemon import Scheduler
 
 def test_init_success_case():
     test_instance = Scheduler(in_memory_only_session=True)

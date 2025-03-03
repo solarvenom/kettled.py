@@ -2,19 +2,16 @@ from sys import stderr
 from json import dumps
 from datetime import datetime
 from typing import Callable, Union
-from kettled.daemon.daemon import get_daemon_pid
-from kettled.daemon.pipes import pipe_command
-from kettled.constants.enums.commands_enum import COMMANDS_ENUM
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.constants.enums.messages_enum import MESSAGES_ENUM
-from kettled.constants.enums.update_event_parameters_enum import UPDATE_EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.pipe_commands_enum import PIPE_COMMANDS_ENUM
-from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
-from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
-from kettled.constants.enums.relative_datetime_options_enum import RELATIVE_DATETIME_OPTIONS_ENUM
-from kettled.utils.relative_datetime_calculator import calculate_relative_datetime
-from kettled.handlers.handler import Handler
+from kettled.daemon import get_daemon_pid, pipe_command
+from kettled.constants import (
+    COMMANDS_ENUM, ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
+    UPDATE_EVENT_PARAMETERS_ENUM, PIPE_COMMANDS_ENUM,
+    EVENT_PARAMETERS_ENUM, RECURRENCY_OPTIONS_ENUM,
+    FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM,
+    ICONS_ENUM
+)
+from kettled.utils import calculate_relative_datetime
+from kettled.handlers import Handler
 
 class ImportHandler(Handler):
     @staticmethod
@@ -131,3 +128,22 @@ class ImportHandler(Handler):
             return stderr.write(str(error))
         except IOError:
             return stderr.write(MESSAGES_ENUM.IS_DOWN.value)
+    
+    @staticmethod
+    def status():
+        try:
+            c_time = get_daemon_pid()
+        except IOError:
+            c_time = None
+    
+        if not c_time:
+            return MESSAGES_ENUM.IS_DOWN.value
+        else:
+            total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
+            if total_seconds < 60:
+                return f"{ICONS_ENUM.KETTLE.value} kettled has been up for {total_seconds} seconds."
+            elif total_seconds < 3600:
+                return f"{ICONS_ENUM.KETTLE.value} kettled has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds."
+            else:
+                return f"{ICONS_ENUM.KETTLE.value} kettled has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds."
+        return

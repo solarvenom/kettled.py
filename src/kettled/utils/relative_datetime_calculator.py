@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
-from kettled.constants.enums.relative_datetime_options_enum import RELATIVE_DATETIME_OPTIONS_ENUM
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.utils.next_recurrency_calculator import calculate_next_recurrency
-from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
+from kettled.constants import RELATIVE_DATETIME_OPTIONS_ENUM, ERROR_MESSAGES_ENUM, RECURRENCY_OPTIONS_ENUM
+from kettled.utils import calculate_next_recurrency
 
 def calculate_relative_datetime(current_datetime, relative_datetime_enumerable):
     if relative_datetime_enumerable == RELATIVE_DATETIME_OPTIONS_ENUM.ONE_MINUTE.value:

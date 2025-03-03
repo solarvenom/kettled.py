@@ -1,6 +1,5 @@
 from datetime import datetime
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
+from kettled.constants import ERROR_MESSAGES_ENUM, EVENT_PARAMETERS_ENUM
 from tests.utils import get_future_datetime, init_scheduler_set_event
 import tests.seeds as seeds
 

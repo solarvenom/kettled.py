@@ -3,21 +3,15 @@ from sys import stderr, stdout
 from json import dumps
 from datetime import datetime
 from kettled.constants.env import DAEMON_NAME, PID_FILE
-from kettled.daemon.daemon import get_daemon_pid
-from kettled.daemon.pipes import pipe_command
-from kettled.constants.enums.commands_enum import COMMANDS_ENUM
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.constants.enums.messages_enum import MESSAGES_ENUM
-from kettled.constants.enums.update_event_parameters_enum import UPDATE_EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.pipe_commands_enum import PIPE_COMMANDS_ENUM
-from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.terminal_prompts_enum import TERMINAL_PROMPTS_ENUM
-from kettled.constants.enums.icons_enum import ICONS_ENUM
-from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
-from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
-from kettled.constants.enums.relative_datetime_options_enum import RELATIVE_DATETIME_OPTIONS_ENUM
-from kettled.utils.relative_datetime_calculator import calculate_relative_datetime
-from kettled.handlers.handler import Handler
+from kettled.daemon import get_daemon_pid, pipe_command
+from kettled.constants import (
+    COMMANDS_ENUM, ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
+    UPDATE_EVENT_PARAMETERS_ENUM, PIPE_COMMANDS_ENUM,
+    EVENT_PARAMETERS_ENUM, TERMINAL_PROMPTS_ENUM, ICONS_ENUM,
+    RECURRENCY_OPTIONS_ENUM, FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM
+)
+from kettled import utils
+from kettled.handlers import Handler
 
 class TerminalHandler(Handler):
     @staticmethod
@@ -35,7 +29,7 @@ class TerminalHandler(Handler):
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_DATETIME.value)
             if date_time in RELATIVE_DATETIME_OPTIONS_ENUM.list():
                 now = datetime.now()
-                date_time = str(calculate_relative_datetime(now, date_time))
+                date_time = str(utils.calculate_relative_datetime(now, date_time))
             data[EVENT_PARAMETERS_ENUM.DATE_TIME.value] = date_time
             recurrency = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_RECURRENCY.value).strip()
             if recurrency == "" or recurrency == None:

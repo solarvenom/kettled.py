@@ -2,14 +2,13 @@ from sys import stderr, stdout
 from typing import Callable
 import re
 from datetime import datetime
-from kettled.constants.date_formats import DATE_FORMATS
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.constants.enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.repository_event_parameters_enum import REPOSITORY_EVENT_PARAMETERS_ENUM
-from kettled.constants.enums.recurrency_options_enum import RECURRENCY_OPTIONS_ENUM
-from kettled.constants.enums.fallback_options_enum import FALLBACK_DIRECTIVES_ENUM
-from kettled.database.event_repository import EventRepository
-from kettled.utils.next_recurrency_calculator import calculate_next_recurrency
+from kettled.constants import (
+    DATE_FORMATS, ERROR_MESSAGES_ENUM, EVENT_PARAMETERS_ENUM,
+    REPOSITORY_EVENT_PARAMETERS_ENUM, RECURRENCY_OPTIONS_ENUM,
+    FALLBACK_DIRECTIVES_ENUM
+)
+from kettled.database import EventRepository
+from kettled import utils
 
 class Scheduler:
     def __init__(self, in_memory_only_session=False):
@@ -31,7 +30,7 @@ class Scheduler:
                     if fallback_directive == FALLBACK_DIRECTIVES_ENUM.EXECUTE_AS_SOON_AS_POSSIBLE.value:
                         self.execute_event(outdated_event, remove_after_execution=False)
                     elif fallback_directive == FALLBACK_DIRECTIVES_ENUM.EXECUTE_ON_NEXT_RECURRENCY.value:
-                        next_recurrency = calculate_next_recurrency(now, outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.RECURRENCY.value])
+                        next_recurrency = utils.calculate_next_recurrency(now, outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.RECURRENCY.value])
                         self.set(
                             event_name=outdated_event[REPOSITORY_EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
                             date_time=next_recurrency,
@@ -143,19 +142,19 @@ class Scheduler:
                     self.in_memory_storage[timestamp][event_name][EVENT_PARAMETERS_ENUM.RECURRENCY.value],
                     self.in_memory_storage[timestamp][event_name][EVENT_PARAMETERS_ENUM.FALLBACK_DIRECTIVE.value]])
                 event_index += 1
-            list_str = "\n_______________________________________________________________________________________________________________________\n"
-            list_str += ('| {:^5} | {:^30} | {:^22} | {:^20} | {:^27} |\n'.format(*[
-                "Index", 
-                "Event Name", 
-                "Scheduled Date & Time", 
-                "Recurrency",
-                "Fallback Directive"]))
-            list_str += "|----------------------------------------------------------------------------------------------------------------------|\n"
-            for event in event_list:
-                list_str += ('| {:^5} | {:^30} | {:^22} | {:^20} | {:^25} |\n'.format(*event))
-            list_str += "|_______|________________________________|________________________|______________________|_____________________________|\n"
-            list_str += "\n"
-            stdout.write(list_str)
+
+            table = utils.render_horizontal_table(
+                [
+                    "Index", 
+                    "Event Name", 
+                    "Scheduled Date & Time", 
+                    "Recurrency",
+                    "Fallback Directive"
+                ],
+                event_list,
+                27
+            )
+            stdout.write(table)
 
     def remove(self, event_name) -> None:
         if event_name not in self.index.keys():

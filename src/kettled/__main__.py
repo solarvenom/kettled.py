@@ -1,9 +1,6 @@
 from sys import exit, argv, stderr
-from kettled.constants.enums.commands_enum import COMMANDS_ENUM
-from kettled.constants.enums.error_messages_enum import ERROR_MESSAGES_ENUM
-from kettled.constants.enums.messages_enum import MESSAGES_ENUM
-from kettled.constants.enums.session_options_enum import SESSION_OPTIONS_ENUM
-from kettled.handlers.terminal_handler import TerminalHandler
+from kettled.constants import COMMANDS_ENUM, ERROR_MESSAGES_ENUM, MESSAGES_ENUM, SESSION_OPTIONS_ENUM
+from kettled.handlers import TerminalHandler
 
 def main() -> None:
     if COMMANDS_ENUM.START.value == argv[1]:
