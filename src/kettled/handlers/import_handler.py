@@ -1,4 +1,4 @@
-from sys import stderr
+from sys import stderr, stdout
 from json import dumps
 from datetime import datetime
 from typing import Callable, Union
@@ -7,7 +7,8 @@ from kettled.constants import (
     COMMANDS_ENUM, ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
     UPDATE_EVENT_PARAMETERS_ENUM, PIPE_COMMANDS_ENUM,
     EVENT_PARAMETERS_ENUM, RECURRENCY_OPTIONS_ENUM,
-    FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM
+    FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM,
+    ICONS_ENUM
 )
 from kettled.utils import calculate_relative_datetime
 from kettled.handlers import Handler
@@ -127,3 +128,22 @@ class ImportHandler(Handler):
             return stderr.write(str(error))
         except IOError:
             return stderr.write(MESSAGES_ENUM.IS_DOWN.value)
+    
+    @staticmethod
+    def status():
+        try:
+            c_time = get_daemon_pid()
+        except IOError:
+            c_time = None
+    
+        if not c_time:
+            return MESSAGES_ENUM.IS_DOWN.value
+        else:
+            total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
+            if total_seconds < 60:
+                return f"{ICONS_ENUM.KETTLE.value} kettled has been up for {total_seconds} seconds."
+            elif total_seconds < 3600:
+                return f"{ICONS_ENUM.KETTLE.value} kettled has been up for {total_seconds // 60} minutes and {total_seconds % 60} seconds."
+            else:
+                return f"{ICONS_ENUM.KETTLE.value} kettled has been up for {total_seconds // 3600} hours, {total_seconds % 3600 // 60} minutes, and {total_seconds % 3600 % 60} seconds."
+        return
