@@ -1,7 +1,7 @@
-from .enums_superclass import GenericEnum
+from .enum_superclass import EnumSuperclass
 from kettled.constants.enums.icons_enum import ICONS_ENUM
 
-class ERROR_MESSAGES_ENUM(GenericEnum):
+class ERROR_MESSAGES_ENUM(EnumSuperclass):
     UNSUPPORTED_DATE_FORMAT = f"{ICONS_ENUM.SKULL.value}  Unsupported date format.\n"
     UNKNOWN_COMMAND = f"{ICONS_ENUM.SKULL.value}  Unknown command.\n"
     MISSING_EVENT_NAME = f"{ICONS_ENUM.SKULL.value}  'event_name' is required.\n"

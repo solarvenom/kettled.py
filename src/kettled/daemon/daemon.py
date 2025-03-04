@@ -6,11 +6,11 @@ from datetime import datetime
 from signal import SIGTERM
 from kettled.constants.env import PID_FILE, PIPE_FILE
 from kettled.constants import (
-    ICONS_ENUM, MESSAGES_ENUM, EVENT_PARAMETERS_ENUM, 
+    ICONS_ENUM, EVENT_PARAMETERS_ENUM, 
     RECURRENCY_OPTIONS_ENUM, FALLBACK_DIRECTIVES_ENUM
 )
 from kettled.utils import calculate_next_recurrency
-from kettled.daemon import Scheduler, read_pipe
+from kettled.daemon import Scheduler, PipeManager, DAEMON_STATUSES_ENUM, DAEMON_ERROR_MESSAGES_ENUM
 
 def get_daemon_pid():
     pf = open(PID_FILE,'r')
@@ -30,7 +30,7 @@ class Daemon:
             if pid > 0:
                 exit(0)
         except OSError as error:
-            stderr.write(f"{ICONS_ENUM.SKULL.value} Fork #1 failed: {error.errno} {error.strerror}\n")
+            stderr.write(f"{DAEMON_ERROR_MESSAGES_ENUM.FIRST_FORK_FAILED.value} {error.errno} {error.strerror}\n")
             exit(1)
         chdir("/")
         setsid()
@@ -41,7 +41,7 @@ class Daemon:
             if pid > 0:
                 exit(0)
         except OSError as error:
-            stderr.write(f"{ICONS_ENUM.SKULL.value} Fork #2 failed: {error.errno} {error.strerror}\n")
+            stderr.write(f"{DAEMON_ERROR_MESSAGES_ENUM.SECOND_FORK_FAILED.value} {error.errno} {error.strerror}\n")
             exit(1)
         
         register(self.del_tmp_files)
@@ -63,7 +63,7 @@ class Daemon:
             pid = None
 
         if pid:
-            stderr.write(MESSAGES_ENUM.IS_ALREADY_RUNNING.value)
+            stderr.write(DAEMON_STATUSES_ENUM.IS_ALREADY_RUNNING.value)
             exit(1)
         self.daemonize()
         self.run()
@@ -75,7 +75,7 @@ class Daemon:
         except IOError:
             pid = None
         if not pid:
-            stderr.write(MESSAGES_ENUM.IS_NOT_RUNNING.value)
+            stderr.write(DAEMON_STATUSES_ENUM.IS_NOT_RUNNING.value)
             return
         try:
             while 1:
@@ -91,14 +91,14 @@ class Daemon:
                 stderr.write(error)
                 exit(1)
         finally:
-            stdout.write(MESSAGES_ENUM.IS_TERMINATED.value)
+            stdout.write(DAEMON_STATUSES_ENUM.IS_TERMINATED.value)
     
     def list(self):
         if self.scheduler:
             self.scheduler.list()
 
     def run(self):
-        stdout.write(MESSAGES_ENUM.IS_STARTED.value)
+        stdout.write(DAEMON_STATUSES_ENUM.IS_STARTED.value)
         self.scheduler = Scheduler(in_memory_only_session=self.in_memory_only_session)
         while True:
             current_timestamp = int(datetime.now().timestamp())
@@ -111,5 +111,5 @@ class Daemon:
             current_pipe_updated_at = path.getmtime(PIPE_FILE)
             if current_pipe_updated_at > self.pipe_updated_at:
                 self.pipe_updated_at = current_pipe_updated_at
-                read_pipe(self)
+                PipeManager.read_pipe(self)
             sleep(0.5)

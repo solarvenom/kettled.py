@@ -1,6 +1,6 @@
-from .enums_superclass import GenericEnum
+from .enum_superclass import EnumSuperclass
 
-class ICONS_ENUM(GenericEnum):
+class ICONS_ENUM(EnumSuperclass):
     KETTLE = "🫖"
     SKULL = "☠️"
     FIX = "🛠️"

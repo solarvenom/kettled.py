@@ -1,6 +1,6 @@
-from .enums_superclass import GenericEnum
+from kettled.constants import EnumSuperclass
 
-class COMMANDS_ENUM(GenericEnum):
+class DAEMON_COMMANDS_ENUM(EnumSuperclass):
     START = "start"
     STOP = "stop"
     RESTART = "restart"
