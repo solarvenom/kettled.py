@@ -2,14 +2,15 @@ from sys import stderr
 from json import dumps
 from datetime import datetime
 from typing import Callable, Union
-from kettled.daemon import get_daemon_pid, pipe_command
+from kettled.daemon import get_daemon_pid, PipeManager
 from kettled.constants import (
-    COMMANDS_ENUM, ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
-    UPDATE_EVENT_PARAMETERS_ENUM, PIPE_COMMANDS_ENUM,
+    ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
+    UPDATE_EVENT_PARAMETERS_ENUM,
     EVENT_PARAMETERS_ENUM, RECURRENCY_OPTIONS_ENUM,
     FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM,
     ICONS_ENUM
 )
+from kettled.daemon import DAEMON_COMMANDS_ENUM, PIPE_COMMANDS_ENUM
 from kettled.utils import calculate_relative_datetime
 from kettled.handlers import Handler
 
@@ -47,8 +48,8 @@ class ImportHandler(Handler):
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_CALLBACK.value)
 
             get_daemon_pid()
-            pipe_command(dumps({
-                PIPE_COMMANDS_ENUM.COMMAND.value: COMMANDS_ENUM.ADD.value,
+            PipeManager.pipe_command(dumps({
+                PIPE_COMMANDS_ENUM.COMMAND.value: DAEMON_COMMANDS_ENUM.ADD.value,
                 PIPE_COMMANDS_ENUM.DATA.value: {
                     EVENT_PARAMETERS_ENUM.EVENT_NAME.value: event_name,
                     EVENT_PARAMETERS_ENUM.DATE_TIME.value: date_time,
@@ -68,8 +69,8 @@ class ImportHandler(Handler):
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
             get_daemon_pid()
-            pipe_command(dumps({
-                PIPE_COMMANDS_ENUM.COMMAND.value: COMMANDS_ENUM.DELETE.value,
+            PipeManager.pipe_command(dumps({
+                PIPE_COMMANDS_ENUM.COMMAND.value: DAEMON_COMMANDS_ENUM.DELETE.value,
                 PIPE_COMMANDS_ENUM.DATA.value: {
                     EVENT_PARAMETERS_ENUM.EVENT_NAME.value: event_name
                 }
@@ -91,7 +92,7 @@ class ImportHandler(Handler):
         try:
             get_daemon_pid()
             command, data = {}, {}
-            command[PIPE_COMMANDS_ENUM.COMMAND.value] = COMMANDS_ENUM.UPDATE.value
+            command[PIPE_COMMANDS_ENUM.COMMAND.value] = DAEMON_COMMANDS_ENUM.UPDATE.value
 
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
@@ -123,7 +124,7 @@ class ImportHandler(Handler):
                 data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_CALLBACK.value] = new_callback
 
             command[PIPE_COMMANDS_ENUM.DATA.value] = data
-            pipe_command(dumps(command))
+            PipeManager.pipe_command(dumps(command))
         except ValueError as error:
             return stderr.write(str(error))
         except IOError:

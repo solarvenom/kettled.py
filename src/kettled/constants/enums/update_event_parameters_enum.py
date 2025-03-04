@@ -1,4 +1,4 @@
-from .enums_superclass import EnumSuperclass
+from .enum_superclass import EnumSuperclass
 
 class UPDATE_EVENT_PARAMETERS_ENUM(EnumSuperclass):
     NEW_EVENT_NAME = "new_event_name"

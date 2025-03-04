@@ -1,4 +1,4 @@
-from .enums_superclass import EnumSuperclass
+from .enum_superclass import EnumSuperclass
 
 class ICONS_ENUM(EnumSuperclass):
     KETTLE = "🫖"

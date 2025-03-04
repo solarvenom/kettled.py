@@ -3,13 +3,14 @@ from sys import stderr, stdout
 from json import dumps
 from datetime import datetime
 from kettled.constants.env import DAEMON_NAME, PID_FILE
-from kettled.daemon import get_daemon_pid, pipe_command
+from kettled.daemon import get_daemon_pid, PipeManager, DAEMON_STATUSES_ENUM
 from kettled.constants import (
-    COMMANDS_ENUM, ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
-    UPDATE_EVENT_PARAMETERS_ENUM, PIPE_COMMANDS_ENUM,
+    ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
+    UPDATE_EVENT_PARAMETERS_ENUM,
     EVENT_PARAMETERS_ENUM, TERMINAL_PROMPTS_ENUM, ICONS_ENUM,
     RECURRENCY_OPTIONS_ENUM, FALLBACK_DIRECTIVES_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM
 )
+from kettled.daemon import PIPE_COMMANDS_ENUM, DAEMON_COMMANDS_ENUM
 from kettled import utils
 from kettled.handlers import Handler
 
@@ -19,7 +20,7 @@ class TerminalHandler(Handler):
         try:
             get_daemon_pid()
             command, data = {}, {}
-            command[PIPE_COMMANDS_ENUM.COMMAND.value] = COMMANDS_ENUM.ADD.value
+            command[PIPE_COMMANDS_ENUM.COMMAND.value] = DAEMON_COMMANDS_ENUM.ADD.value
             event_name = input(TERMINAL_PROMPTS_ENUM.ADD_EVENT_NAME.value).strip()
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
@@ -44,24 +45,24 @@ class TerminalHandler(Handler):
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_CALLBACK.value)
             data[EVENT_PARAMETERS_ENUM.CALLBACK.value] = callback
             command[PIPE_COMMANDS_ENUM.DATA.value] = data
-            pipe_command(dumps(command))
+            PipeManager.pipe_command(dumps(command))
         except ValueError as error:
             stderr.write(str(error))
         except IOError:
-            stderr.write(MESSAGES_ENUM.IS_DOWN.value)
+            stderr.write(DAEMON_STATUSES_ENUM.IS_DOWN.value)
 
     @staticmethod
     def delete():
         try:
             get_daemon_pid()
             command, data = {}, {}
-            command[PIPE_COMMANDS_ENUM.COMMAND.value] = COMMANDS_ENUM.DELETE.value
+            command[PIPE_COMMANDS_ENUM.COMMAND.value] = DAEMON_COMMANDS_ENUM.DELETE.value
             event_name = input(TERMINAL_PROMPTS_ENUM.DELETE_EVENT_NAME.value).strip()
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
             data[EVENT_PARAMETERS_ENUM.EVENT_NAME.value] = event_name
             command[PIPE_COMMANDS_ENUM.DATA.value] = data
-            pipe_command(dumps(command))
+            PipeManager.pipe_command(dumps(command))
         except ValueError as error:
             stderr.write(str(error))
         except IOError as error:
@@ -72,7 +73,7 @@ class TerminalHandler(Handler):
         try:
             get_daemon_pid()
             command, data = {}, {}
-            command[PIPE_COMMANDS_ENUM.COMMAND.value] = COMMANDS_ENUM.UPDATE.value
+            command[PIPE_COMMANDS_ENUM.COMMAND.value] = DAEMON_COMMANDS_ENUM.UPDATE.value
             event_name = input(TERMINAL_PROMPTS_ENUM.UPDATE_EVENT_NAME.value).strip()
             if event_name == "" or event_name == None:
                 raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_NAME.value)
@@ -105,11 +106,11 @@ class TerminalHandler(Handler):
             if new_callback != "" and new_callback != None:
                 data[UPDATE_EVENT_PARAMETERS_ENUM.NEW_CALLBACK.value] = new_callback
             command[PIPE_COMMANDS_ENUM.DATA.value] = data
-            pipe_command(dumps(command))
+            PipeManager.pipe_command(dumps(command))
         except ValueError as error:
             stderr.write(str(error))
         except IOError:
-            stderr.write(MESSAGES_ENUM.IS_DOWN.value)
+            stderr.write(DAEMON_STATUSES_ENUM.IS_DOWN.value)
 
     @staticmethod
     def status():
@@ -119,7 +120,7 @@ class TerminalHandler(Handler):
             c_time = None
     
         if not c_time:
-            stdout.write(MESSAGES_ENUM.IS_DOWN.value)
+            stdout.write(DAEMON_STATUSES_ENUM.IS_DOWN.value)
         else:
             total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
             if total_seconds < 60:
@@ -134,6 +135,6 @@ class TerminalHandler(Handler):
     def list():
         try:
             get_daemon_pid()
-            pipe_command(dumps({PIPE_COMMANDS_ENUM.COMMAND.value: COMMANDS_ENUM.LIST.value}))
+            PipeManager.pipe_command(dumps({PIPE_COMMANDS_ENUM.COMMAND.value: DAEMON_COMMANDS_ENUM.LIST.value}))
         except IOError:
-            stderr.write(MESSAGES_ENUM.IS_DOWN.value)
+            stderr.write(DAEMON_STATUSES_ENUM.IS_DOWN.value)

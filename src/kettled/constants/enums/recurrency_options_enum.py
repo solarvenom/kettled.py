@@ -1,4 +1,4 @@
-from .enums_superclass import EnumSuperclass
+from .enum_superclass import EnumSuperclass
 
 class RECURRENCY_OPTIONS_ENUM(EnumSuperclass):
     NOT_RECURRING = "not_recurring"

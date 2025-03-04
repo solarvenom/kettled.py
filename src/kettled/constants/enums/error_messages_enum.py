@@ -1,4 +1,4 @@
-from .enums_superclass import EnumSuperclass
+from .enum_superclass import EnumSuperclass
 from kettled.constants.enums.icons_enum import ICONS_ENUM
 
 class ERROR_MESSAGES_ENUM(EnumSuperclass):

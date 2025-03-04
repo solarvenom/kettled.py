@@ -1,4 +1,4 @@
-from .enums_superclass import EnumSuperclass
+from .enum_superclass import EnumSuperclass
 
 class RELATIVE_DATETIME_OPTIONS_ENUM(EnumSuperclass):
     ONE_MINUTE = "one_minute"
