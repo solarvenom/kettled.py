@@ -1,7 +1,7 @@
-from .enums_superclass import GenericEnum
+from .enums_superclass import EnumSuperclass
 from kettled.constants.enums.icons_enum import ICONS_ENUM
 
-class TERMINAL_PROMPTS_ENUM(GenericEnum):
+class TERMINAL_PROMPTS_ENUM(EnumSuperclass):
     ADD_EVENT_NAME = f"{ICONS_ENUM.KETTLE.value} Please enter event name: "
     ADD_EVENT_DATE_TIME = f"{ICONS_ENUM.KETTLE.value} Please enter event scheduled date: "
     ADD_EVENT_RECURRENCY = f"{ICONS_ENUM.KETTLE.value} Please enter event recurrency (Will default to 'not_recurring' if not provided): "

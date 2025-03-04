@@ -1,5 +1,5 @@
-from .enums_superclass import GenericEnum
+from .enums_superclass import EnumSuperclass
 
-class PIPE_COMMANDS_ENUM(GenericEnum):
+class PIPE_COMMANDS_ENUM(EnumSuperclass):
     COMMAND = "command"
     DATA = "data"

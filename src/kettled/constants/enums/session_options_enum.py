@@ -1,4 +1,4 @@
-from .enums_superclass import GenericEnum
+from .enums_superclass import EnumSuperclass
 
-class SESSION_OPTIONS_ENUM(GenericEnum):
+class SESSION_OPTIONS_ENUM(EnumSuperclass):
     IN_MEMORY_ONLY = "in-memory-only"

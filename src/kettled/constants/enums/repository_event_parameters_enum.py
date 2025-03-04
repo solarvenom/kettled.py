@@ -1,6 +1,6 @@
-from .enums_superclass import GenericEnum
+from .enums_superclass import EnumSuperclass
 
-class REPOSITORY_EVENT_PARAMETERS_ENUM(GenericEnum):
+class REPOSITORY_EVENT_PARAMETERS_ENUM(EnumSuperclass):
     EVENT_NAME = "event_name"
     TIMESTAMP = "timestamp"
     RECURRENCY = "recurrency"

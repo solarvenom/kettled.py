@@ -1,6 +1,6 @@
-from .enums_superclass import GenericEnum
+from .enums_superclass import EnumSuperclass
 
-class RECURRENCY_OPTIONS_ENUM(GenericEnum):
+class RECURRENCY_OPTIONS_ENUM(EnumSuperclass):
     NOT_RECURRING = "not_recurring"
     HOURLY = "hourly"
     DAILY = "daily"
