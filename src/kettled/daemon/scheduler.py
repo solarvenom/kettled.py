@@ -1,6 +1,5 @@
 from sys import stderr, stdout
 from typing import Callable
-import re
 from datetime import datetime
 from kettled.constants import (
     DATE_FORMATS, ERROR_MESSAGES_ENUM, EVENT_PARAMETERS_ENUM,
@@ -48,24 +47,6 @@ class Scheduler:
                         store_in_db=False)
             except KeyError:
                 pass
-    
-    @staticmethod
-    def get_timestamp(date) -> int:
-        # TODO: refactor this
-        try:
-            date_time = int(date)
-            if datetime.timestamp(datetime.now()) > date_time:
-                raise ValueError(ERROR_MESSAGES_ENUM.TIMESTAMP_OUTDATED.value)
-            return date_time
-        except ValueError:
-            matched_format = None
-            for pattern in DATE_FORMATS.keys():
-                if re.match(pattern, date):
-                    matched_format = int(datetime.timestamp(datetime.strptime(date, DATE_FORMATS[pattern])))
-                    break
-            if matched_format == None:
-                raise ValueError(ERROR_MESSAGES_ENUM.UNSUPPORTED_DATE_FORMAT.value)
-            return matched_format
 
     def get(self, event_name):
         if event_name == None or event_name == "":
@@ -109,7 +90,9 @@ class Scheduler:
         if callback == None:
             raise ValueError(ERROR_MESSAGES_ENUM.MISSING_EVENT_CALLBACK.value)
 
-        timestamp = self.get_timestamp(date_time)
+        # timestamp = self.get_timestamp(date_time)
+        timestamp = utils.calculate_timestamp(date_time)
+        
         current_timestamp = int(datetime.now().timestamp())
         if current_timestamp > timestamp:
             raise ValueError(ERROR_MESSAGES_ENUM.TIMESTAMP_OUTDATED.value)
