@@ -1,4 +1,3 @@
-from .date_formats import DATE_FORMATS
 from .enums.enum_superclass import EnumSuperclass
 from .enums.error_messages_enum import ERROR_MESSAGES_ENUM
 from .enums.event_parameters_enum import EVENT_PARAMETERS_ENUM
@@ -14,7 +13,6 @@ from .enums.update_event_parameters_enum import UPDATE_EVENT_PARAMETERS_ENUM
 from .enums.weekdays_enum import WEEKDAYS_ENUM
 
 __all__ = [
-    "DATE_FORMATS",
     "ERROR_MESSAGES_ENUM",
     "FALLBACK_DIRECTIVES_ENUM",
     "ICONS_ENUM",

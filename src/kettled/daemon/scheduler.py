@@ -2,7 +2,7 @@ from sys import stderr, stdout
 from typing import Callable
 from datetime import datetime
 from kettled.constants import (
-    DATE_FORMATS, ERROR_MESSAGES_ENUM, EVENT_PARAMETERS_ENUM,
+    ERROR_MESSAGES_ENUM, EVENT_PARAMETERS_ENUM,
     REPOSITORY_EVENT_PARAMETERS_ENUM, RECURRENCY_OPTIONS_ENUM,
     FALLBACK_DIRECTIVES_ENUM
 )
