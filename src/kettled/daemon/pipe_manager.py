@@ -2,9 +2,10 @@ from sys import stderr
 from json import loads
 from kettled.constants.env import PIPE_FILE
 from kettled.constants import (
-    PIPE_COMMANDS_ENUM, COMMANDS_ENUM, EVENT_PARAMETERS_ENUM,
+    EVENT_PARAMETERS_ENUM,
     UPDATE_EVENT_PARAMETERS_ENUM, ERROR_MESSAGES_ENUM
 )
+from .enums import DAEMON_ERROR_MESSAGES_ENUM, PIPE_COMMANDS_ENUM, DAEMON_COMMANDS_ENUM
 
 def pipe_command(command_json):
         with open(PIPE_FILE, 'w') as pipe:
@@ -15,9 +16,9 @@ def read_pipe(daemon):
             command_json = pipe.read().strip()
             parsed_command = loads(command_json)
             if daemon.scheduler != None:
-                if parsed_command[PIPE_COMMANDS_ENUM.COMMAND.value] == COMMANDS_ENUM.LIST.value:
+                if parsed_command[PIPE_COMMANDS_ENUM.COMMAND.value] == DAEMON_COMMANDS_ENUM.LIST.value:
                     daemon.list()
-                elif parsed_command[PIPE_COMMANDS_ENUM.COMMAND.value] == COMMANDS_ENUM.ADD.value:
+                elif parsed_command[PIPE_COMMANDS_ENUM.COMMAND.value] == DAEMON_COMMANDS_ENUM.ADD.value:
                     try:
                         daemon.scheduler.set(
                             event_name=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.EVENT_NAME.value],
@@ -27,9 +28,9 @@ def read_pipe(daemon):
                             callback=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.CALLBACK.value])
                     except ValueError as error:
                         stderr.write(str(error))
-                elif parsed_command[PIPE_COMMANDS_ENUM.COMMAND.value] == COMMANDS_ENUM.DELETE.value:
+                elif parsed_command[PIPE_COMMANDS_ENUM.COMMAND.value] == DAEMON_COMMANDS_ENUM.DELETE.value:
                     daemon.scheduler.remove(event_name=parsed_command[PIPE_COMMANDS_ENUM.DATA.value][EVENT_PARAMETERS_ENUM.EVENT_NAME.value])
-                elif parsed_command[PIPE_COMMANDS_ENUM.COMMAND.value] == COMMANDS_ENUM.UPDATE.value:
+                elif parsed_command[PIPE_COMMANDS_ENUM.COMMAND.value] == DAEMON_COMMANDS_ENUM.UPDATE.value:
                     try:
                         fields_to_update = parsed_command[PIPE_COMMANDS_ENUM.DATA.value].keys()
                         daemon.scheduler.update(
@@ -42,4 +43,4 @@ def read_pipe(daemon):
                     except ValueError as error:
                         stderr.write(str(error))
             else:
-                stderr.write(ERROR_MESSAGES_ENUM.SCHEDULER_NOT_RUNNING.value)
+                stderr.write(f"{DAEMON_ERROR_MESSAGES_ENUM.SCHEDULER_NOT_RUNNING.value}\n")

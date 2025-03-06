@@ -3,6 +3,7 @@ from kettled.constants import (
     RECURRENCY_OPTIONS_ENUM, RELATIVE_DATETIME_OPTIONS_ENUM, 
     FALLBACK_DIRECTIVES_ENUM, EVENT_PARAMETERS_ENUM, ICONS_ENUM
 )
+import kettled.utils as KettledUtils
 
 __version__ = "1.1.1"
 __author__ = "solarvenom"
@@ -13,5 +14,6 @@ __all__ = [
     "RELATIVE_DATETIME_OPTIONS_ENUM",
     "FALLBACK_DIRECTIVES_ENUM",
     "EVENT_PARAMETERS_ENUM",
-    "ICONS_ENUM"
+    "ICONS_ENUM",
+    "KettledUtils"
 ]

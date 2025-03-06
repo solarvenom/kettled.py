@@ -1,6 +1,6 @@
-from .enums_superclass import GenericEnum
+from .enum_superclass import EnumSuperclass
 
-class RELATIVE_DATETIME_OPTIONS_ENUM(GenericEnum):
+class RELATIVE_DATETIME_OPTIONS_ENUM(EnumSuperclass):
     ONE_MINUTE = "one_minute"
     TWO_MINUTES = "two_minutes"
     FIVE_MINUTES = "five_minutes"
