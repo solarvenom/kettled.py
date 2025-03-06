@@ -2,7 +2,7 @@ from sys import stderr
 from json import dumps
 from datetime import datetime
 from typing import Callable, Union
-from kettled.daemon import get_daemon_pid, PipeManager
+from kettled.daemon import get_daemon_pid, PipeManager, DAEMON_STATUSES_ENUM
 from kettled.constants import (
     ERROR_MESSAGES_ENUM, MESSAGES_ENUM,
     UPDATE_EVENT_PARAMETERS_ENUM,
@@ -61,7 +61,7 @@ class ImportHandler(Handler):
         except ValueError as error:
             return stderr.write(str(error))
         except IOError:
-            return stderr.write(MESSAGES_ENUM.IS_DOWN.value)
+            return stderr.write(DAEMON_STATUSES_ENUM.IS_DOWN.value)
 
     @staticmethod
     def delete(event_name: str):
@@ -128,7 +128,7 @@ class ImportHandler(Handler):
         except ValueError as error:
             return stderr.write(str(error))
         except IOError:
-            return stderr.write(MESSAGES_ENUM.IS_DOWN.value)
+            return stderr.write(DAEMON_STATUSES_ENUM.IS_DOWN.value)
     
     @staticmethod
     def status():
@@ -138,7 +138,7 @@ class ImportHandler(Handler):
             c_time = None
     
         if not c_time:
-            return MESSAGES_ENUM.IS_DOWN.value
+            return DAEMON_STATUSES_ENUM.IS_DOWN.value
         else:
             total_seconds = int((datetime.now() - datetime.fromtimestamp(c_time)).total_seconds())
             if total_seconds < 60:
